@@ -16,11 +16,11 @@ import static DAO.DBConnection.getConnection;
 public class DBCustomers {
     public static ObservableList<Customer> getCustomers() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
-        String getAllCustomers = "SELECT customers.Customer_ID, customers.Customer_Name, customers.Address, "
-                + "customers.Postal_Code, customers.Phone, first_level_divisions.Division, countries.Country "
-                + "FROM customers "
-                + "INNER JOIN first_level_divisions ON first_level_divisions.Division_ID = customers.Division_ID "
-                + "INNER JOIN countries ON countries.Country_ID = first_level_divisions.Country_ID";
+        String getAllCustomers = "SELECT c.Customer_ID, c.Customer_Name, c.Address, "
+                + "c.Postal_Code, c.Phone, fld.Division, co.Country "
+                + "FROM customers c"
+                + "INNER JOIN first_level_divisions fld ON fld.Division_ID = c.Division_ID "
+                + "INNER JOIN countries co ON co.Country_ID = fld.Country_ID";
 
         try {
             PreparedStatement ps = getConnection().prepareStatement(getAllCustomers);
@@ -28,13 +28,13 @@ public class DBCustomers {
 
             while (rs.next()) {
                 Customer customer = new Customer();
-                customer.setCustomerID(rs.getInt("customer.Customer_ID"));
-                customer.setName(rs.getString("customers.Customer_Name"));
-                customer.setAddress(rs.getString("customers.Address"));
-                customer.setPostalCode(rs.getString("customers.Postal_Code"));
-                customer.setPhoneNumber(rs.getString("customers.Phone"));
-                customer.setFirstLevelDivision(rs.getString("first_level_divisions.Division"));
-                customer.setCountry(rs.getString("countries.Country"));
+                customer.setCustomerID(rs.getInt("c.Customer_ID"));
+                customer.setName(rs.getString("c.Customer_Name"));
+                customer.setAddress(rs.getString("c.Address"));
+                customer.setPostalCode(rs.getString("c.Postal_Code"));
+                customer.setPhoneNumber(rs.getString("c.Phone"));
+                customer.setFirstLevelDivision(rs.getString("fld.Division"));
+                customer.setCountry(rs.getString("co.Country"));
                 customers.add(customer);
             }
         } catch (Exception e) {
