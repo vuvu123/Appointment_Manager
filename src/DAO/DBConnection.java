@@ -1,4 +1,4 @@
-package Utils;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -43,6 +43,8 @@ public class DBConnection {
     public static void closeConnection() {
         try {
             conn.close();
+
+            System.out.println("Connection closed.");
         } catch (Exception e) {
             // do nothing
         }
