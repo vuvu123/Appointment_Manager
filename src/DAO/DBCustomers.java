@@ -18,7 +18,7 @@ public class DBCustomers {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         String getAllCustomers = "SELECT c.Customer_ID, c.Customer_Name, c.Address, "
                 + "c.Postal_Code, c.Phone, fld.Division, co.Country "
-                + "FROM customers c"
+                + "FROM customers c "
                 + "INNER JOIN first_level_divisions fld ON fld.Division_ID = c.Division_ID "
                 + "INNER JOIN countries co ON co.Country_ID = fld.Country_ID";
 
