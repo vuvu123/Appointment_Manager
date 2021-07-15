@@ -1,5 +1,21 @@
 package View_Controller;
 
-public class CustomersController {
+import Model.Customer;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CustomersController {
+    @FXML private TableView<Customer> customersTableView;
+    @FXML private TableColumn<Customer, String> customerIDTableColumn;
+
+
+
+//    @Override
+//    public void initialize(URL url, ResourceBundle rb) {
+//
+//    }
 }
