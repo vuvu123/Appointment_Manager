@@ -1,4 +1,4 @@
-package DAO;
+package Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,13 +6,11 @@ import java.sql.SQLException;
 
 public class DBConnection {
     // JDBC URL parts
-    private static final String protocol = "jdbc";
-    private static final String vendorName = ":mysql:";
-    private static final String ipAddress = "//wgudb.ucertify.com:3306/";
+    private static final String ipAddress = "jdbc:mysql://wgudb.ucertify.com:3306/";
     private static final String dbName = "WJ07aEM";
 
     // JDBC URL
-    private static final String jdbcURL = protocol + vendorName + ipAddress + dbName;
+    private static final String jdbcURL = ipAddress + dbName;
 
     // Driver interface reference
     private static final String MYSQLJDBCDriver = "com.mysql.cj.jdbc.Driver";

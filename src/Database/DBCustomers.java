@@ -1,4 +1,4 @@
-package DAO;
+package Database;
 
 import Model.Customer;
 import javafx.collections.FXCollections;
@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import static DAO.DBConnection.getConnection;
+import static Database.DBConnection.getConnection;
 
 /*
  * Queries database for all customers

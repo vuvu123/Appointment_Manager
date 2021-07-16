@@ -4,6 +4,9 @@ public class Country {
     private int countryID;
     private String country;
 
+    public Country() {
+    }
+
     public Country(int countryID, String country) {
         this.countryID = countryID;
         this.country = country;

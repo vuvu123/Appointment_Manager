@@ -8,7 +8,7 @@ import javafx.scene.control.TableView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CustomersController {
+public class AddCustomerController {
     @FXML private TableView<Customer> customersTableView;
     @FXML private TableColumn<Customer, String> customerIDTableColumn;
 
