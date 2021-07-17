@@ -23,20 +23,22 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label id="usernameText" text="Username" />
-            <TextField id="usernameTextField" GridPane.columnIndex="1" />
-            <Label id="Password" text="Password" GridPane.rowIndex="1" />
-            <TextField id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button id="submitButton" mnemonicParsing="false" text="Submit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label id="usernameText" fx:id="usernameLabel" text="Username" />
+            <TextField id="usernameTextField" fx:id="usernameTextField" GridPane.columnIndex="1" />
+            <Label id="Password" fx:id="passwordLabel" text="Password" GridPane.rowIndex="1" />
+            <TextField id="passwordTextField" fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button id="submitButton" fx:id="submitButton" mnemonicParsing="false" onAction="#submitButton" text="Submit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </GridPane>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="216.0" layoutY="62.0" prefHeight="48.0" prefWidth="169.0" text="Login">
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="146.0" layoutY="58.0" prefHeight="53.0" prefWidth="309.0" text="Login">
          <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="36.0" />
          </font>
       </Label>
+      <Label fx:id="errorMessageLabel" layoutX="190.0" layoutY="257.0" prefHeight="43.0" prefWidth="401.0" text="Error Message" textFill="RED" visible="false" />
+      <Label fx:id="userLocationLabel" layoutX="465.0" layoutY="14.0" prefHeight="25.0" prefWidth="128.0" text="User Location" />
    </children>
 </AnchorPane>

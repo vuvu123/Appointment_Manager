@@ -43,4 +43,6 @@ public class DBCustomers {
 
         return customers;
     }
+
+    //When deleting customer record, delete all appointments associated with that customer as well
 }
