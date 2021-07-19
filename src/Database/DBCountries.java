@@ -15,7 +15,7 @@ import static Database.DBConnection.getConnection;
 public class DBCountries {
     public static ObservableList<Country> getAllCountries() {
         ObservableList<Country> allCountries = FXCollections.observableArrayList();
-        String getAllCountries = "SELECT Country from countries";
+        String getAllCountries = "SELECT Country_ID, Country from countries";
 
         try {
             PreparedStatement ps = getConnection().prepareStatement(getAllCountries);
@@ -23,6 +23,7 @@ public class DBCountries {
 
             while (rs.next()) {
                 Country country = new Country();
+                country.setCountryID(rs.getInt("Country_ID"));
                 country.setCountry(rs.getString("Country"));
 
                 allCountries.add(country);

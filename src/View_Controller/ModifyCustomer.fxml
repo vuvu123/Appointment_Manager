@@ -61,7 +61,7 @@
             <Label text="Country" GridPane.rowIndex="6" />
             <TextField fx:id="customerNameTextField" prefHeight="25.0" prefWidth="396.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="addressTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="postalCodeTextField" alignment="CENTER" prefWidth="377.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="postalCodeTextField" prefWidth="377.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="phoneNumberTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <ComboBox fx:id="firstLevelDivisionComboBox" prefHeight="25.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <ComboBox fx:id="countryComboBox" prefHeight="25.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />

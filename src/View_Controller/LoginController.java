@@ -41,13 +41,12 @@ public class LoginController implements Initializable {
         String pass = passwordTextField.getText();
 
         if (verifyCredentials(user, pass)) {
-            Parent parent = FXMLLoader.load(getClass().getResource("Appointments.fxml"));
+            Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } else {
-            errorMessageLabel.setText("The username or password you entered is incorrect. Try again.");
             errorMessageLabel.setVisible(true);
         }
     }
