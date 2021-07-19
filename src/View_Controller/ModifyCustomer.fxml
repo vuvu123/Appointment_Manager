@@ -19,12 +19,12 @@
             <TableView fx:id="customersTableView" layoutX="10.0" layoutY="72.0" prefHeight="264.0" prefWidth="780.0">
                <columns>
                   <TableColumn fx:id="customerIDTableColumn" prefWidth="83.0" text="Customer ID" />
-                  <TableColumn fx:id="customerNameTableColumn" prefWidth="99.0" text="Customer Name" />
-                  <TableColumn fx:id="customerAddressTableColumn" prefWidth="245.0" text="Address" />
-                  <TableColumn fx:id="postalCodeTableColumn" prefWidth="87.0" text="Postal Code" />
-                  <TableColumn fx:id="phoneTableColumn" prefWidth="62.0" text="Phone" />
-                  <TableColumn prefWidth="129.0" text="First Level Division" />
-                  <TableColumn prefWidth="72.0" text="Country" />
+                  <TableColumn fx:id="customerNameTableColumn" prefWidth="109.0" text="Customer Name" />
+                  <TableColumn fx:id="customerAddressTableColumn" prefWidth="201.0" text="Address" />
+                  <TableColumn fx:id="postalCodeTableColumn" prefWidth="77.0" text="Postal Code" />
+                  <TableColumn fx:id="phoneTableColumn" prefWidth="130.0" text="Phone" />
+                  <TableColumn fx:id="divisionTableColumn" prefWidth="125.0" text="First Level Division" />
+                  <TableColumn fx:id="countryTableColumn" prefWidth="53.0" text="Country" />
                </columns>
             </TableView>
             <Label layoutX="269.0" text="Modify Customer">
@@ -32,10 +32,10 @@
                   <Font name="System Bold" size="32.0" />
                </font>
             </Label>
-            <Button fx:id="clearButton1" layoutX="732.0" layoutY="337.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Delete" />
+            <Button fx:id="deleteButton" layoutX="732.0" layoutY="337.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Delete" />
             <TextField fx:id="searchTextField" layoutX="565.0" layoutY="45.0" prefHeight="25.0" prefWidth="165.0" promptText="Search for Customer Name" />
-            <Button fx:id="searchButton" layoutX="738.0" layoutY="45.0" mnemonicParsing="false" text="Search" />
-            <Button fx:id="clearSearchFieldButton" layoutX="536.0" layoutY="45.0" mnemonicParsing="false" text="X" />
+            <Button fx:id="searchButton" layoutX="738.0" layoutY="45.0" mnemonicParsing="false" onAction="#searchButton" text="Search" />
+            <Button fx:id="clearSearchFieldButton" layoutX="536.0" layoutY="45.0" mnemonicParsing="false" onAction="#clearSearchFieldButton" text="X" />
          </children>
       </AnchorPane>
       <GridPane layoutX="123.0" layoutY="364.0" prefHeight="198.0" prefWidth="523.0">
@@ -69,8 +69,8 @@
             <TextField fx:id="customerIDTextField" disable="true" prefHeight="25.0" prefWidth="56.0" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <Button fx:id="appointmentsButton" layoutX="288.0" layoutY="567.0" mnemonicParsing="false" prefHeight="30.0" text="Cancel" />
-      <Button fx:id="addCustomerButton" layoutX="229.0" layoutY="567.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="52.0" text="Save" />
-      <Button fx:id="clearButton" layoutX="657.0" layoutY="364.0" mnemonicParsing="false" prefHeight="30.0" text="Clear" />
+      <Button fx:id="cancelButton" layoutX="288.0" layoutY="567.0" mnemonicParsing="false" onAction="#cancelButton" prefHeight="30.0" text="Cancel" />
+      <Button fx:id="saveButton" layoutX="229.0" layoutY="567.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="52.0" text="Save" />
+      <Button fx:id="clearButton" layoutX="657.0" layoutY="364.0" mnemonicParsing="false" onAction="#clearButton" prefHeight="30.0" text="Clear" />
    </children>
 </AnchorPane>

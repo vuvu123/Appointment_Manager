@@ -18,7 +18,7 @@
             <TableView fx:id="appointmentsTableView" layoutX="10.0" layoutY="68.0" prefHeight="314.0" prefWidth="780.0">
                <columns>
                   <TableColumn fx:id="apptIDTableColumn" prefWidth="83.0" text="Appt ID" />
-                  <TableColumn fx:id="contactTableColumn" prefWidth="111.0" text="Contact" />
+                  <TableColumn fx:id="customerTableColumn" prefWidth="111.0" text="Customer" />
                   <TableColumn fx:id="titleTableColumn" prefWidth="75.0" text="Title" />
                   <TableColumn fx:id="locationTableColumn" prefWidth="134.0" text="Location" />
                   <TableColumn fx:id="typeTableColumn" prefWidth="91.0" text="Type" />

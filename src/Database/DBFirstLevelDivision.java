@@ -9,11 +9,12 @@ import java.sql.ResultSet;
 
 import static Database.DBConnection.getConnection;
 
-/*
- * Returns ObservableList of first level divisions
- * @param String country name is passed in
- */
 public class DBFirstLevelDivision {
+    /**
+     * Query to return list of first level divisions by country ID
+     * @param countryID
+     * @return ObservableList of FirstLevelDivision objects
+     */
     public static ObservableList<FirstLevelDivision> getDivisionsByCountry(int countryID) {
         ObservableList<FirstLevelDivision> divisions = FXCollections.observableArrayList();
         String getDivisionsByCountry = "SELECT Division_ID, Division FROM first_level_divisions WHERE COUNTRY_ID = ?";

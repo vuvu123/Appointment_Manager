@@ -19,7 +19,7 @@ public class MainScreenController implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
 
     @FXML private TableColumn<Appointment, Integer> apptIDTableColumn;
-    @FXML private TableColumn<Appointment, String> contactTableColumn;
+    @FXML private TableColumn<Appointment, String> customerTableColumn;
     @FXML private TableColumn<Appointment, String> titleTableColumn;
     @FXML private TableColumn<Appointment, String> locationTableColumn;
     @FXML private TableColumn<Appointment, String> typeTableColumn;
@@ -34,12 +34,6 @@ public class MainScreenController implements Initializable {
     @FXML private ToggleGroup dateViewToggleGroup;
 
     @FXML private DatePicker datePicker;
-
-    @FXML private Button addAppointmentButton;
-    @FXML private Button modifyAppointmentButton;
-    @FXML private Button addCustomerButton;
-    @FXML private Button modifyCustomerButton;
-    @FXML private Button reportsButton;
 
 /*
  *  Handle navigation buttons

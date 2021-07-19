@@ -9,10 +9,11 @@ import java.sql.ResultSet;
 
 import static Database.DBConnection.getConnection;
 
-/*
- * Returns all country names from countries table
- */
 public class DBCountries {
+    /**
+     * Returns all country names from countries table
+     * @return ObservableList of Country objects
+     */
     public static ObservableList<Country> getAllCountries() {
         ObservableList<Country> allCountries = FXCollections.observableArrayList();
         String getAllCountries = "SELECT Country_ID, Country from countries";

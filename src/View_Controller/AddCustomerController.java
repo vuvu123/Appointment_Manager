@@ -35,12 +35,6 @@ public class AddCustomerController implements Initializable {
     @FXML private TableColumn<Customer, String> divisionTableColumn;
     @FXML private TableColumn<Customer, String> countryTableColumn;
 
-    @FXML private Button clearSearchFieldButton;
-    @FXML private Button searchButton;
-    @FXML private Button addButton;
-    @FXML private Button clearButton;
-    @FXML private Button cancelButton;
-
     @FXML private TextField customerNameTextField;
     @FXML private TextField addressTextField;
     @FXML private TextField postalCodeTextField;

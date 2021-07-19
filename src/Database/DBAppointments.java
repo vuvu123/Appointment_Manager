@@ -13,13 +13,12 @@ public class DBAppointments {
 
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
-        // finish later
 //        String getAllAppointments =
 
         return allAppointments;
     }
 
-    /*
+    /**
      * Deletes all appointments from the parameter customerID
      * @param customerID
      */
@@ -28,6 +27,7 @@ public class DBAppointments {
 
         try {
             PreparedStatement ps = getConnection().prepareStatement(deleteApptByID);
+            ps.setInt(1, customerID);
             int numRowsDeleted = ps.executeUpdate();
 
             System.out.println(numRowsDeleted + " appointments deleted for customerID " + customerID + ".");
