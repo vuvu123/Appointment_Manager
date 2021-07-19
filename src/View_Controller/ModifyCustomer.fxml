@@ -32,10 +32,12 @@
                   <Font name="System Bold" size="32.0" />
                </font>
             </Label>
-            <Button fx:id="deleteButton" layoutX="732.0" layoutY="337.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Delete" />
+            <Button fx:id="deleteButton" layoutX="732.0" layoutY="337.0" mnemonicParsing="false" onAction="#deleteButton" prefHeight="25.0" prefWidth="58.0" text="Delete" />
             <TextField fx:id="searchTextField" layoutX="565.0" layoutY="45.0" prefHeight="25.0" prefWidth="165.0" promptText="Search for Customer Name" />
             <Button fx:id="searchButton" layoutX="738.0" layoutY="45.0" mnemonicParsing="false" onAction="#searchButton" text="Search" />
             <Button fx:id="clearSearchFieldButton" layoutX="536.0" layoutY="45.0" mnemonicParsing="false" onAction="#clearSearchFieldButton" text="X" />
+            <Button fx:id="modifyButton" layoutX="672.0" layoutY="337.0" mnemonicParsing="false" onAction="#modifyButton" prefHeight="25.0" prefWidth="58.0" text="Modify" />
+            <Label fx:id="infoLabel" layoutX="16.0" layoutY="335.0" prefHeight="25.0" prefWidth="638.0" text="Message" textFill="RED" />
          </children>
       </AnchorPane>
       <GridPane layoutX="123.0" layoutY="364.0" prefHeight="198.0" prefWidth="523.0">
@@ -59,18 +61,18 @@
             <Label text="Phone Number" GridPane.rowIndex="4" />
             <Label prefHeight="17.0" prefWidth="106.0" text="First Level Division" GridPane.rowIndex="5" />
             <Label text="Country" GridPane.rowIndex="6" />
-            <TextField fx:id="customerNameTextField" prefHeight="25.0" prefWidth="396.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="addressTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="postalCodeTextField" prefWidth="377.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="phoneNumberTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <ComboBox fx:id="firstLevelDivisionComboBox" prefHeight="25.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <ComboBox fx:id="countryComboBox" prefHeight="25.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="customerNameTextField" disable="true" prefHeight="25.0" prefWidth="396.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="addressTextField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="postalCodeTextField" disable="true" prefWidth="377.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="phoneNumberTextField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="firstLevelDivisionComboBox" disable="true" prefHeight="25.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <ComboBox fx:id="countryComboBox" disable="true" prefHeight="25.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Label text="Customer ID" />
             <TextField fx:id="customerIDTextField" disable="true" prefHeight="25.0" prefWidth="56.0" GridPane.columnIndex="1" />
          </children>
       </GridPane>
       <Button fx:id="cancelButton" layoutX="288.0" layoutY="567.0" mnemonicParsing="false" onAction="#cancelButton" prefHeight="30.0" text="Cancel" />
-      <Button fx:id="saveButton" layoutX="229.0" layoutY="567.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="52.0" text="Save" />
-      <Button fx:id="clearButton" layoutX="657.0" layoutY="364.0" mnemonicParsing="false" onAction="#clearButton" prefHeight="30.0" text="Clear" />
+      <Button fx:id="saveButton" layoutX="229.0" layoutY="567.0" mnemonicParsing="false" onAction="#saveButton" prefHeight="30.0" prefWidth="52.0" text="Save" />
+      <Button fx:id="clearButton" layoutX="646.0" layoutY="364.0" mnemonicParsing="false" onAction="#clearButton" prefHeight="30.0" text="Clear" />
    </children>
 </AnchorPane>

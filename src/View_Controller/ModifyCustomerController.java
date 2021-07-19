@@ -18,8 +18,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static Database.DBFirstLevelDivision.*;
@@ -43,10 +45,14 @@ public class ModifyCustomerController implements Initializable {
     @FXML private TextField phoneNumberTextField;
     @FXML private TextField searchTextField;
 
+    @FXML private Label infoLabel;
+
     @FXML private ComboBox<FirstLevelDivision> firstLevelDivisionComboBox;
     @FXML private ComboBox<Country> countryComboBox;
 
     private ObservableList<Customer> custTableView = FXCollections.observableArrayList();
+
+    private static Customer selectedCust;
 
     // Handle buttons
     @FXML
@@ -71,14 +77,89 @@ public class ModifyCustomerController implements Initializable {
     @FXML
     private void clearSearchFieldButton(ActionEvent event) throws IOException {
         searchTextField.setText("");
-        customersTableView.setItems(DBCustomers.getCustomers());
-        customersTableView.refresh();
+        updateCustomersTable();
     }
 
     @FXML
     private void searchButton(ActionEvent event) throws IOException {
         customersTableView.setItems(lookUpCustomer(searchTextField.getText()));
         customersTableView.refresh();
+    }
+
+    @FXML
+    private void saveButton(ActionEvent event) throws IOException {
+        selectedCust = customersTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedCust != null) {
+            int custID = Integer.parseInt(customerIDTextField.getText());
+            String custName = customerNameTextField.getText();
+            String address = addressTextField.getText();
+            String postalCode = postalCodeTextField.getText();
+            String phone = phoneNumberTextField.getText();
+            int divID = firstLevelDivisionComboBox.getValue().getDivisionID();
+
+            // Need to add validation for blank fields
+            DBCustomers.updateCustomer(custID, custName, address, postalCode, phone, divID);
+            updateCustomersTable();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to save product.");
+            alert.setContentText("No customer selected! Please select a customer from the table.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void deleteButton(ActionEvent event) throws IOException {
+        selectedCust = customersTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedCust != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Customer");
+            alert.setHeaderText("Confirm Delete Customer");
+            alert.setContentText("Are you sure you want to delete " + selectedCust.getName() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                int custID = selectedCust.getCustomerID();
+                DBCustomers.deleteCustomer(custID);
+                updateCustomersTable();
+                infoLabel.setText(selectedCust.getName() + " was successfully deleted.");
+                infoLabel.setVisible(true);
+            } else {
+                System.out.println("Deletion of customer " + selectedCust.getName() +" delete cancelled.");
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to delete product.");
+            alert.setContentText("No customer selected! Please select a customer from the table.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void modifyButton(ActionEvent event) throws IOException {
+        selectedCust = customersTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedCust != null) {
+            enableFields();
+
+            customerIDTextField.setText(String.valueOf(selectedCust.getCustomerID()));
+            customerNameTextField.setText(selectedCust.getName());
+            addressTextField.setText(selectedCust.getAddress());
+            postalCodeTextField.setText(selectedCust.getPostalCode());
+            phoneNumberTextField.setText(selectedCust.getPhoneNumber());
+            countryComboBox.setValue(lookUpCountry(selectedCust.getCountry()));
+            firstLevelDivisionComboBox.setValue(lookUpFirstDiv(selectedCust.getDivisionID()));
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to modify product.");
+            alert.setContentText("No customer selected! Please select a customer from the table.");
+            alert.showAndWait();
+        }
     }
 
     private ObservableList<Customer> lookUpCustomer(String custName) {
@@ -116,9 +197,17 @@ public class ModifyCustomerController implements Initializable {
 
     // Refresh customersTableView
     private void updateCustomersTable() {
-        custTableView = DBCustomers.getCustomers();
-        customersTableView.setItems(custTableView);
+        customersTableView.setItems(DBCustomers.getCustomers());
         customersTableView.refresh();
+    }
+
+    private void enableFields() {
+        customerNameTextField.setDisable(false);
+        addressTextField.setDisable(false);
+        postalCodeTextField.setDisable(false);
+        phoneNumberTextField.setDisable(false);
+        firstLevelDivisionComboBox.setDisable(false);
+        countryComboBox.setDisable(false);
     }
 
     @Override
@@ -141,28 +230,14 @@ public class ModifyCustomerController implements Initializable {
         countryComboBox.getSelectionModel().selectFirst();
         firstLevelDivisionComboBox.setItems(getDivisionsByCountry(1));
 
+        infoLabel.setVisible(false);
 
         // Listener action when country comboBox selection is changed
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue != null) {
-                System.out.println("Country ID: " + newValue.getCountryID());
                 newValue.setAssocDivisions(getDivisionsByCountry(newValue.getCountryID()));
                 firstLevelDivisionComboBox.setItems(newValue.getAssocDivisions());
             }
         });
-
-        // Listener action to populate fields when table row is selected
-        customersTableView.getSelectionModel().selectedItemProperty().addListener((option, oldValue, newValue) -> {
-            System.out.println(newValue.getName() + " selected.");
-            System.out.println("Division ID: " + newValue.getDivisionID());
-            customerIDTextField.setText(String.valueOf(newValue.getCustomerID()));
-            customerNameTextField.setText(newValue.getName());
-            addressTextField.setText(newValue.getAddress());
-            postalCodeTextField.setText(newValue.getPostalCode());
-            phoneNumberTextField.setText(newValue.getPhoneNumber());
-            countryComboBox.setValue(lookUpCountry(newValue.getCountry()));
-            firstLevelDivisionComboBox.setValue(lookUpFirstDiv(newValue.getDivisionID()));
-        });
     }
-
 }

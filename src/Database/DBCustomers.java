@@ -106,8 +106,8 @@ public class DBCustomers {
      * @param divID
      */
     public static void updateCustomer(int custID, String name, String address, String postalCode, String phone, int divID) {
-        String updateCustQuery = "UPDATE customers SET Customer_Name = '?', Address = '?', Postal_Code = '?', "
-                + "Phone = '?', Division_ID = ? WHERE Customer_ID = ?";
+        String updateCustQuery = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, " +
+                "Phone = ?, Division_ID = ? WHERE Customer_ID = ?";
 
         try {
             PreparedStatement ps = getConnection().prepareStatement(updateCustQuery);
