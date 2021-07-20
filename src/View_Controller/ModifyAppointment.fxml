@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="650.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.ModifyAppointmentController">
    <children>
       <AnchorPane prefHeight="405.0" prefWidth="1024.0">
@@ -41,6 +40,7 @@
             </Label>
             <Button layoutX="898.0" layoutY="377.0" mnemonicParsing="false" text="Modify" />
             <Button layoutX="958.0" layoutY="377.0" mnemonicParsing="false" text="Delete" />
+            <Label fx:id="messageLabel" layoutX="10.0" layoutY="377.0" prefHeight="25.0" prefWidth="844.0" text="Message" textFill="RED" />
          </children>
       </AnchorPane>
       <GridPane layoutX="105.0" layoutY="411.0" prefHeight="188.0" prefWidth="815.0">

@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class ModifyAppointmentController implements Initializable {
@@ -54,6 +55,8 @@ public class ModifyAppointmentController implements Initializable {
 
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
+
+    @FXML private Label messageLabel;
 
     private ObservableList<Appointment> apptsTable = FXCollections.observableArrayList();
 
@@ -94,6 +97,21 @@ public class ModifyAppointmentController implements Initializable {
 
     }
 
+    private ObservableList<LocalTime> fillTimeComboBox() {
+        ObservableList<LocalTime> timeList = FXCollections.observableArrayList();
+        LocalTime start = LocalTime.of(0, 0);
+        LocalTime end = LocalTime.of(23, 30);
+
+        while (start.isBefore(end.plusSeconds(1))) {
+            timeList.add(start);
+            start = start.plusMinutes(15);
+        }
+        // Program keeps timing out when I set "end" to LocalTime.of(23,45)
+        // Does not crash adding last 15 min increment outside of while loop
+        timeList.add(LocalTime.of(23, 45));
+        return timeList;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         apptsTable = DBAppointments.getAllAppointments();
@@ -118,6 +136,10 @@ public class ModifyAppointmentController implements Initializable {
         contactComboBox.setItems(DBContacts.getAllContacts());
         customerComboBox.setItems(DBCustomers.getAllCustIDandName());
         userComboBox.setItems(DBUsers.getAllUsers());
+        startTimeComboBox.setItems(fillTimeComboBox());
+        endTimeComboBox.setItems(fillTimeComboBox());
+
+        messageLabel.setVisible(false);
     }
 
 }

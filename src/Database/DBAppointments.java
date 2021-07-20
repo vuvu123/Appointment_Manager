@@ -15,6 +15,10 @@ import static Database.DBConnection.getConnection;
 
 public class DBAppointments {
 
+    /**
+     * Query to populate appointments table on AddAppointment.fxml and ModifyAppointment.fxml
+     * @return ObservableList of Appointment objects
+     */
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         String getAllAppointments = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, cu.Customer_Name, " +
@@ -79,6 +83,31 @@ public class DBAppointments {
 
             System.out.println(numRowsDeleted + " appointments deleted for customerID " + customerID + ".");
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addAppointment(String title, String description, String location, String type, int contactID,
+                                      int custID, String startDateTime, String endDateTime, int userID) {
+        String addApptQuery = "INSERT INTO appointments(Title, Description, Location, Type, Start, End, Customer_ID, " +
+                "User_ID, Contact_ID, CREATED_BY, Last_Updated_By) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, 'user', 'user')";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(addApptQuery);
+            ps.setString(1, title);
+            ps.setString(2, description);
+            ps.setString(3, location);
+            ps.setString(4, type);
+            ps.setString(5, startDateTime);
+            ps.setString(6, endDateTime);
+            ps.setInt(7, custID);
+            ps.setInt(8, userID);
+            ps.setInt(9, contactID);
+
+            int numRowsAdded = ps.executeUpdate();
+
+            System.out.println(numRowsAdded + " appointments added.");
         } catch (Exception e) {
             e.printStackTrace();
         }

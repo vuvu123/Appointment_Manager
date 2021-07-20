@@ -1,14 +1,12 @@
 package Model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class DateTimeConversion {
     private static String dateFormat = "MM-dd-yyyy";
     private static String timeFormat = "HH:mm";
+    private static String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
     public static String convertZDTtoStringLocalDate(ZonedDateTime zdt) {
         LocalDateTime ldt = zdt.toLocalDateTime();
@@ -22,5 +20,13 @@ public class DateTimeConversion {
         LocalTime lt = ldt.toLocalTime();
         DateTimeFormatter dtfTime = DateTimeFormatter.ofPattern(timeFormat);
         return lt.format(dtfTime);
+    }
+
+    public static String convertLocalDateLocalTimetoUTCString(LocalDate ld, LocalTime lt) {
+        LocalDateTime ldt = LocalDateTime.of(ld, lt);
+        ZonedDateTime zdt = ldt.atZone(ZoneId.of("UTC"));
+        LocalDateTime utcLDT = zdt.toLocalDateTime();
+        DateTimeFormatter dtfDateTime = DateTimeFormatter.ofPattern(dateTimeFormat);
+        return utcLDT.format(dtfDateTime);
     }
 }

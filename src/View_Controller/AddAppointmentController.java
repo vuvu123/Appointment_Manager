@@ -4,10 +4,7 @@ import Database.DBAppointments;
 import Database.DBContacts;
 import Database.DBCustomers;
 import Database.DBUsers;
-import Model.Appointment;
-import Model.Contact;
-import Model.Customer;
-import Model.User;
+import Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +20,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.*;
 import java.util.ResourceBundle;
 
 public class AddAppointmentController implements Initializable {
@@ -49,8 +48,8 @@ public class AddAppointmentController implements Initializable {
     @FXML private ComboBox<Contact> contactComboBox;
     @FXML private ComboBox<Customer> customerComboBox;
     @FXML private ComboBox<User> userComboBox;
-    @FXML private ComboBox startTimeComboBox;
-    @FXML private ComboBox endTimeComboBox;
+    @FXML private ComboBox<LocalTime> startTimeComboBox;
+    @FXML private ComboBox<LocalTime> endTimeComboBox;
 
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
@@ -83,7 +82,50 @@ public class AddAppointmentController implements Initializable {
         userComboBox.getSelectionModel().clearSelection();
     }
 
+    @FXML
+    private void addButton(ActionEvent event) throws IOException {
+        String title = titleTextField.getText();
+        String description = descriptionTextField.getText();
+        String location = locationTextField.getText();
+        String type = typeTextField.getText();
+        int contactID = contactComboBox.getValue().getContactID();
+        int custID = customerComboBox.getValue().getCustomerID();
+        int user = userComboBox.getValue().getUserID();
 
+        // Date time
+        LocalDate startDate = startDatePicker.getValue();
+        LocalTime startTime = startTimeComboBox.getValue();
+        String startDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(startDate, startTime);
+
+        LocalDate endDate = endDatePicker.getValue();
+        LocalTime endTime = endTimeComboBox.getValue();
+        String endDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
+
+        DBAppointments.addAppointment(title, description, location, type, contactID, custID, startDateTime, endDateTime, user);
+        refreshApptTable();
+        clearButton(event);
+    }
+
+    private ObservableList<LocalTime> fillTimeComboBox() {
+        ObservableList<LocalTime> timeList = FXCollections.observableArrayList();
+        LocalTime start = LocalTime.of(0, 0);
+        LocalTime end = LocalTime.of(23, 30);
+
+        while (start.isBefore(end.plusSeconds(1))) {
+            timeList.add(start);
+            start = start.plusMinutes(15);
+        }
+        // Program keeps timing out when I set "end" to 23:45
+        // Does not crash adding last 15 min increment outside of while loop
+        timeList.add(LocalTime.of(23, 45));
+        return timeList;
+    }
+
+    private void refreshApptTable() {
+        apptsTable = DBAppointments.getAllAppointments();
+        appointmentsTableView.setItems(apptsTable);
+        appointmentsTableView.refresh();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -109,5 +151,7 @@ public class AddAppointmentController implements Initializable {
         contactComboBox.setItems(DBContacts.getAllContacts());
         customerComboBox.setItems(DBCustomers.getAllCustIDandName());
         userComboBox.setItems(DBUsers.getAllUsers());
+        startTimeComboBox.setItems(fillTimeComboBox());
+        endTimeComboBox.setItems(fillTimeComboBox());
     }
 }
