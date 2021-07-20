@@ -88,7 +88,6 @@ public class AddAppointmentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-
         // Populate Appointments TableView
         apptIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         titleTableColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
