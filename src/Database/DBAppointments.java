@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static Database.DBConnection.getConnection;
 
@@ -26,7 +28,6 @@ public class DBAppointments {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-
                 Appointment appt = new Appointment();
 
                 appt.setAppointmentID(rs.getInt("a.Appointment_ID"));
@@ -38,8 +39,20 @@ public class DBAppointments {
                 appt.setType(rs.getString("a.Type"));
                 appt.setUserName(rs.getString("u.User_Name"));
 
-                //set Date and Times
+                LocalDateTime startLDT = rs.getTimestamp("a.Start").toLocalDateTime();
+                // Convert from UTC to systemDefault (User's Local Time)
+                ZonedDateTime startZDT = startLDT.atZone(ZoneId.systemDefault());
+                appt.setStart(startZDT);
+
+                LocalDateTime endLDT = rs.getTimestamp("a.End").toLocalDateTime();
+                // Convert from UTC to systemDefault (User's Local Time)
+                ZonedDateTime endZDT = endLDT.atZone(ZoneId.systemDefault());
+                appt.setStart(endZDT);
+
+                allAppointments.add(appt);
             }
+
+            return allAppointments;
         } catch (Exception e) {
             e.printStackTrace();
         }

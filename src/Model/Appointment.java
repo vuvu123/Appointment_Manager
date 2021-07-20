@@ -5,7 +5,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Appointment {
     private IntegerProperty appointmentID;
@@ -16,8 +20,8 @@ public class Appointment {
     private StringProperty description;
     private StringProperty location;
     private StringProperty type;
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private ZonedDateTime start;
+    private ZonedDateTime end;
 
     private String custName;
     private String contactName;
@@ -130,19 +134,19 @@ public class Appointment {
         this.type.set(type);
     }
 
-    public LocalDateTime getStart() {
+    public ZonedDateTime getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(ZonedDateTime start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public ZonedDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(ZonedDateTime end) {
         this.end = end;
     }
 
@@ -168,5 +172,45 @@ public class Appointment {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public LocalDate getStartLocalDate() {
+        LocalDateTime ldt = this.start.toLocalDateTime(); // convert ZonedDateTime to LocalDateTime
+        return ldt.toLocalDate();  // convert LocalDateTime to LocalDate
+    }
+
+    public LocalTime getStartLocalTime() {
+        LocalDateTime ldt = this.start.toLocalDateTime();
+        return ldt.toLocalTime();
+    }
+
+    public LocalDate getEndLocalDate() {
+        LocalDateTime ldt = this.end.toLocalDateTime();
+        return ldt.toLocalDate();
+    }
+
+    public LocalTime getEndLocalTime() {
+        LocalDateTime ldt = this.end.toLocalDateTime();
+        return ldt.toLocalTime();
+    }
+
+    public String getStartDateString() {
+        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        return this.getStartLocalDate().format(dtfDate);
+    }
+
+    public String getStartTimeString() {
+        DateTimeFormatter dtfTime = DateTimeFormatter.ofPattern("HH:mm");
+        return this.getStartLocalTime().format(dtfTime);
+    }
+
+    public String getEndDateString() {
+        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        return this.getEndLocalDate().format(dtfDate);
+    }
+
+    public String getEndTimeString() {
+        DateTimeFormatter dtfTime = DateTimeFormatter.ofPattern("HH:mm");
+        return this.getEndLocalTime().format(dtfTime);
     }
 }
