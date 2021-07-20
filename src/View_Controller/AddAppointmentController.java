@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AddAppointmentController implements Initializable {
-    @FXML private TableView<Appointment> appointmentTableView;
+    @FXML private TableView<Appointment> appointmentsTableView;
 
     @FXML private TableColumn<Appointment, Integer> apptIDTableColumn;
     @FXML private TableColumn<Appointment, String> titleTableColumn;
@@ -87,6 +87,11 @@ public class AddAppointmentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        apptsTable = DBAppointments.getAllAppointments();
+
+        for (Appointment a : apptsTable) {
+            System.out.println(a);
+        }
 
         // Populate Appointments TableView
         apptIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
@@ -96,16 +101,13 @@ public class AddAppointmentController implements Initializable {
         custNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("custName"));
         contactTableColumn.setCellValueFactory(new PropertyValueFactory<>("contactName"));
         typeTableColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        // need to modify propertyvalues for start and end
-        startDateTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStartDateString()));
-        startTimeTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStartTimeString()));
-        endDateTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEndDateString()));
-        endTimeTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEndTimeString()));
+        startDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        startTimeTableColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        endDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        endTimeTableColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         userTableColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
 
-        appointmentTableView.setItems(DBAppointments.getAllAppointments());
-
-//        appointmentTableView.setItems(DBAppointments.getAllAppointments());
+        appointmentsTableView.setItems(apptsTable);
 
         // Populate combo boxes
         contactComboBox.setItems(DBContacts.getAllContacts());

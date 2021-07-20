@@ -1,6 +1,7 @@
 package Database;
 
 import Model.Appointment;
+import Model.DateTimeConversion;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -44,19 +45,23 @@ public class DBAppointments {
                 ZonedDateTime startZDT = startLDT.atZone(ZoneId.systemDefault());
                 appt.setStart(startZDT);
 
+                appt.setStartDate(DateTimeConversion.convertZDTtoStringLocalDate(startZDT));
+                appt.setStartTime(DateTimeConversion.convertZDTtoStringLocalTime(startZDT));
+
                 LocalDateTime endLDT = rs.getTimestamp("a.End").toLocalDateTime();
                 // Convert from UTC to systemDefault (User's Local Time)
                 ZonedDateTime endZDT = endLDT.atZone(ZoneId.systemDefault());
                 appt.setStart(endZDT);
 
+                appt.setEndDate(DateTimeConversion.convertZDTtoStringLocalDate(endZDT));
+                appt.setEndTime(DateTimeConversion.convertZDTtoStringLocalTime(endZDT));
+
                 allAppointments.add(appt);
             }
-
             return allAppointments;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 

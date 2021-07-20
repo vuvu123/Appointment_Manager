@@ -125,6 +125,7 @@ public class ModifyCustomerController implements Initializable {
                 updateCustomersTable();
                 infoLabel.setText(selectedCust.getName() + " was successfully deleted.");
                 infoLabel.setVisible(true);
+                clearButton(event);
             } else {
                 System.out.println("Deletion of customer " + selectedCust.getName() +" delete cancelled.");
             }

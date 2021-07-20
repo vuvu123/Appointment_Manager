@@ -6,13 +6,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Customer {
-    private IntegerProperty customerID;
-    private StringProperty name;
-    private StringProperty address;
-    private StringProperty postalCode;
-    private StringProperty phoneNumber;
-    private StringProperty firstLevelDivision;
-    private StringProperty country;
+    private final IntegerProperty customerID;
+    private final StringProperty name;
+    private final StringProperty address;
+    private final StringProperty postalCode;
+    private final StringProperty phoneNumber;
+    private final StringProperty firstLevelDivision;
+    private final StringProperty country;
     private int divisionID, countryID;
 
     public Customer() {

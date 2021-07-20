@@ -5,27 +5,27 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Appointment {
-    private IntegerProperty appointmentID;
-    private IntegerProperty customerID;
-    private IntegerProperty userID;
-    private IntegerProperty contactID;
-    private StringProperty title;
-    private StringProperty description;
-    private StringProperty location;
-    private StringProperty type;
+    private final IntegerProperty appointmentID;
+    private final IntegerProperty customerID;
+    private final IntegerProperty userID;
+    private final IntegerProperty contactID;
+    private final StringProperty title;
+    private final StringProperty description;
+    private final StringProperty location;
+    private final StringProperty type;
     private ZonedDateTime start;
     private ZonedDateTime end;
 
-    private String custName;
-    private String contactName;
-    private String userName;
+    private final StringProperty custName;
+    private final StringProperty contactName;
+    private final StringProperty userName;
+    private final StringProperty startDate;
+    private final StringProperty startTime;
+    private final StringProperty endDate;
+    private final StringProperty endTime;
 
     public Appointment() {
         this.appointmentID = new SimpleIntegerProperty();
@@ -36,6 +36,13 @@ public class Appointment {
         this.description = new SimpleStringProperty();
         this.location = new SimpleStringProperty();
         this.type = new SimpleStringProperty();
+        this.custName = new SimpleStringProperty();
+        this.contactName = new SimpleStringProperty();
+        this.userName = new SimpleStringProperty();
+        this.startDate = new SimpleStringProperty();
+        this.startTime = new SimpleStringProperty();
+        this.endDate = new SimpleStringProperty();
+        this.endTime = new SimpleStringProperty();
     }
 
     public int getAppointmentID() {
@@ -151,66 +158,96 @@ public class Appointment {
     }
 
     public String getCustName() {
+        return custName.get();
+    }
+
+    public StringProperty custNameProperty() {
         return custName;
     }
 
     public void setCustName(String custName) {
-        this.custName = custName;
+        this.custName.set(custName);
     }
 
     public String getContactName() {
+        return contactName.get();
+    }
+
+    public StringProperty contactNameProperty() {
         return contactName;
     }
 
     public void setContactName(String contactName) {
-        this.contactName = contactName;
+        this.contactName.set(contactName);
     }
 
     public String getUserName() {
+        return userName.get();
+    }
+
+    public StringProperty userNameProperty() {
         return userName;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userName.set(userName);
     }
 
-    public LocalDate getStartLocalDate() {
-        LocalDateTime ldt = this.start.toLocalDateTime(); // convert ZonedDateTime to LocalDateTime
-        return ldt.toLocalDate();  // convert LocalDateTime to LocalDate
+    public String getStartDate() {
+        return startDate.get();
     }
 
-    public LocalTime getStartLocalTime() {
-        LocalDateTime ldt = this.start.toLocalDateTime();
-        return ldt.toLocalTime();
+    public StringProperty startDateProperty() {
+        return startDate;
     }
 
-    public LocalDate getEndLocalDate() {
-        LocalDateTime ldt = this.end.toLocalDateTime();
-        return ldt.toLocalDate();
+    public void setStartDate(String startDate) {
+        this.startDate.set(startDate);
     }
 
-    public LocalTime getEndLocalTime() {
-        LocalDateTime ldt = this.end.toLocalDateTime();
-        return ldt.toLocalTime();
+    public String getStartTime() {
+        return startTime.get();
     }
 
-    public String getStartDateString() {
-        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        return this.getStartLocalDate().format(dtfDate);
+    public StringProperty startTimeProperty() {
+        return startTime;
     }
 
-    public String getStartTimeString() {
-        DateTimeFormatter dtfTime = DateTimeFormatter.ofPattern("HH:mm");
-        return this.getStartLocalTime().format(dtfTime);
+    public void setStartTime(String startTime) {
+        this.startTime.set(startTime);
     }
 
-    public String getEndDateString() {
-        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        return this.getEndLocalDate().format(dtfDate);
+    public String getEndDate() {
+        return endDate.get();
     }
 
-    public String getEndTimeString() {
-        DateTimeFormatter dtfTime = DateTimeFormatter.ofPattern("HH:mm");
-        return this.getEndLocalTime().format(dtfTime);
+    public StringProperty endDateProperty() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate.set(endDate);
+    }
+
+    public String getEndTime() {
+        return endTime.get();
+    }
+
+    public StringProperty endTimeProperty() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime.set(endTime);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.appointmentID + " | " + this.title + " | " + this.description + " | " + this.location + " | ");
+        sb.append(this.custName + " | " + this.contactName + " | " + this.type + " | ");
+        sb.append("Start Date/Time: " + this.startDate + " " + this.startTime + " | End Date/Time: " + this.endDate + " " + this.endTime);
+        sb.append(" | " + this.userName);
+        return sb.toString();
     }
 }
