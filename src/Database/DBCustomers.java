@@ -48,6 +48,32 @@ public class DBCustomers {
     }
 
     /**
+     * Queries all customers for customerID and customer name
+     * @return ObservableList of Customers
+     */
+    public static ObservableList<Customer> getAllCustIDandName() {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+        String getAllCustIDName = "SELECT Customer_ID, Customer_Name FROM customers";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(getAllCustIDName);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerID(rs.getInt("Customer_ID"));
+                customer.setName(rs.getString("Customer_Name"));
+
+                customers.add(customer);
+            }
+            return customers;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * Deletes appointments associated with customerID, then deletes customer
      * @param customerID
      */

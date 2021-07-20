@@ -2,7 +2,6 @@ package View_Controller;
 
 import Database.DBCountries;
 import Database.DBCustomers;
-import Database.DBFirstLevelDivision;
 import Model.Country;
 import Model.Customer;
 import Model.FirstLevelDivision;
@@ -89,6 +88,7 @@ public class AddCustomerController implements Initializable {
 
         DBCustomers.addCustomer(custName, address, postalCode, phone, divID);
         updateCustomersTable();
+        clearButton(event);
     }
 
     private ObservableList<Customer> lookUpCustomer(String custName) {
@@ -132,7 +132,6 @@ public class AddCustomerController implements Initializable {
         countryComboBox.setItems(DBCountries.getAllCountries());
         countryComboBox.getSelectionModel().selectFirst();
         firstLevelDivisionComboBox.setItems(getDivisionsByCountry(1));
-//        firstLevelDivisionComboBox.getSelectionModel().selectFirst();
 
         // Listener action when country comboBox selection is changed
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {

@@ -20,6 +20,7 @@ public class MainScreenController implements Initializable {
 
     @FXML private TableColumn<Appointment, Integer> apptIDTableColumn;
     @FXML private TableColumn<Appointment, String> customerTableColumn;
+    @FXML private TableColumn<Appointment, String> contactTableColumn;
     @FXML private TableColumn<Appointment, String> titleTableColumn;
     @FXML private TableColumn<Appointment, String> locationTableColumn;
     @FXML private TableColumn<Appointment, String> typeTableColumn;

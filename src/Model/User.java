@@ -5,6 +5,8 @@ public class User {
     private String userName;
     private String password;
 
+    public User() {}
+
     public User(int userID, String userName, String password) {
         this.userID = userID;
         this.userName = userName;
@@ -33,5 +35,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.userID + ") " + this.userName;
     }
 }
