@@ -8,7 +8,6 @@ import Model.Appointment;
 import Model.Contact;
 import Model.Customer;
 import Model.User;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -42,7 +41,6 @@ public class AddAppointmentController implements Initializable {
     @FXML private TableColumn<Appointment, String> endTimeTableColumn;
     @FXML private TableColumn<Appointment, String> userTableColumn;
 
-    @FXML private TextField apptIDTextField;
     @FXML private TextField titleTextField;
     @FXML private TextField descriptionTextField;
     @FXML private TextField locationTextField;
@@ -85,13 +83,11 @@ public class AddAppointmentController implements Initializable {
         userComboBox.getSelectionModel().clearSelection();
     }
 
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         apptsTable = DBAppointments.getAllAppointments();
-
-        for (Appointment a : apptsTable) {
-            System.out.println(a);
-        }
 
         // Populate Appointments TableView
         apptIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
@@ -113,6 +109,5 @@ public class AddAppointmentController implements Initializable {
         contactComboBox.setItems(DBContacts.getAllContacts());
         customerComboBox.setItems(DBCustomers.getAllCustIDandName());
         userComboBox.setItems(DBUsers.getAllUsers());
-
     }
 }
