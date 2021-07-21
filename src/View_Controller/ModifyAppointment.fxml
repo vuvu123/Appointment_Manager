@@ -19,18 +19,18 @@
          <children>
             <TableView fx:id="appointmentsTableView" layoutX="10.0" layoutY="50.0" prefHeight="324.0" prefWidth="1003.0">
                <columns>
-                  <TableColumn fx:id="apptIDTableColumn" prefWidth="83.0" text="Appt ID" />
-                  <TableColumn fx:id="titleTableColumn" prefWidth="79.0" text="Title" />
-                  <TableColumn fx:id="descriptionTableColumn" prefWidth="96.0" text="Description" />
-                  <TableColumn fx:id="locationTableColumn" prefWidth="94.0" text="Location" />
-                  <TableColumn fx:id="custNameTableColumn" prefWidth="105.0" text="Customer Name" />
-                  <TableColumn fx:id="contactTableColumn" prefWidth="93.0" text="Contact" />
-                  <TableColumn fx:id="typeTableColumn" prefWidth="68.0" text="Type" />
-                  <TableColumn fx:id="startDateTableColumn" prefWidth="76.0" text="Start Date" />
-                  <TableColumn fx:id="startTimeTableColumn" prefWidth="76.0" text="Start Time" />
-                  <TableColumn fx:id="endDateTableColumn" prefWidth="76.0" text="End Date" />
-                  <TableColumn fx:id="endTimeTableColumn" prefWidth="76.0" text="End Time" />
-                  <TableColumn fx:id="userTableColumn" prefWidth="79.0" text="User" />
+                  <TableColumn fx:id="apptIDTableColumn" prefWidth="54.0" text="Appt ID" />
+                  <TableColumn fx:id="titleTableColumn" prefWidth="88.0" text="Title" />
+                  <TableColumn fx:id="descriptionTableColumn" prefWidth="124.0" text="Description" />
+                  <TableColumn fx:id="locationTableColumn" prefWidth="97.0" text="Location" />
+                  <TableColumn fx:id="custNameTableColumn" prefWidth="98.0" text="Customer Name" />
+                  <TableColumn fx:id="contactTableColumn" prefWidth="89.0" text="Contact" />
+                  <TableColumn fx:id="typeTableColumn" prefWidth="112.0" text="Type" />
+                  <TableColumn fx:id="startDateTableColumn" prefWidth="70.0" text="Start Date" />
+                  <TableColumn fx:id="startTimeTableColumn" prefWidth="68.0" text="Start Time" />
+                  <TableColumn fx:id="endDateTableColumn" prefWidth="84.0" text="End Date" />
+                  <TableColumn fx:id="endTimeTableColumn" prefWidth="66.0" text="End Time" />
+                  <TableColumn fx:id="userTableColumn" prefWidth="51.0" text="User" />
                </columns>
             </TableView>
             <Label layoutX="353.0" text="Modify Appointment">

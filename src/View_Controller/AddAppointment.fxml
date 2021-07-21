@@ -13,24 +13,24 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="650.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AddAppointmentController">
+<AnchorPane prefHeight="650.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AddAppointmentController">
    <children>
       <AnchorPane prefHeight="400.0" prefWidth="1024.0">
          <children>
             <TableView fx:id="appointmentsTableView" layoutX="10.0" layoutY="50.0" prefHeight="324.0" prefWidth="1003.0">
                <columns>
-                  <TableColumn fx:id="apptIDTableColumn" prefWidth="83.0" text="Appt ID" />
-                  <TableColumn fx:id="titleTableColumn" prefWidth="79.0" text="Title" />
-                  <TableColumn fx:id="descriptionTableColumn" prefWidth="96.0" text="Description" />
-                  <TableColumn fx:id="locationTableColumn" prefWidth="94.0" text="Location" />
-                  <TableColumn fx:id="custNameTableColumn" prefWidth="105.0" text="Customer Name" />
-                  <TableColumn fx:id="contactTableColumn" prefWidth="93.0" text="Contact" />
-                  <TableColumn fx:id="typeTableColumn" prefWidth="68.0" text="Type" />
-                  <TableColumn fx:id="startDateTableColumn" prefWidth="76.0" text="Start Date" />
-                  <TableColumn fx:id="startTimeTableColumn" prefWidth="76.0" text="Start Time" />
-                  <TableColumn fx:id="endDateTableColumn" prefWidth="76.0" text="End Date" />
-                  <TableColumn fx:id="endTimeTableColumn" prefWidth="76.0" text="End Time" />
-                  <TableColumn fx:id="userTableColumn" prefWidth="79.0" text="User" />
+                  <TableColumn fx:id="apptIDTableColumn" prefWidth="48.0" text="Appt ID" />
+                  <TableColumn fx:id="titleTableColumn" prefWidth="85.0" text="Title" />
+                  <TableColumn fx:id="descriptionTableColumn" prefWidth="129.0" text="Description" />
+                  <TableColumn fx:id="locationTableColumn" prefWidth="93.0" text="Location" />
+                  <TableColumn fx:id="custNameTableColumn" prefWidth="106.0" text="Customer Name" />
+                  <TableColumn fx:id="contactTableColumn" prefWidth="78.0" text="Contact" />
+                  <TableColumn fx:id="typeTableColumn" prefWidth="120.0" text="Type" />
+                  <TableColumn fx:id="startDateTableColumn" prefWidth="70.0" text="Start Date" />
+                  <TableColumn fx:id="startTimeTableColumn" prefWidth="68.0" text="Start Time" />
+                  <TableColumn fx:id="endDateTableColumn" prefWidth="82.0" text="End Date" />
+                  <TableColumn fx:id="endTimeTableColumn" prefWidth="64.0" text="End Time" />
+                  <TableColumn fx:id="userTableColumn" prefWidth="58.0" text="User" />
                </columns>
             </TableView>
             <Label layoutX="376.0" text="Add Appointment">

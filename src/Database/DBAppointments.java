@@ -26,7 +26,8 @@ public class DBAppointments {
                 "FROM appointments a\n" +
                 "INNER JOIN customers cu ON cu.Customer_ID = a.Customer_ID\n" +
                 "INNER JOIN contacts co ON co.Contact_ID = a.Contact_ID\n" +
-                "INNER JOIN users u ON u.User_ID = a.User_ID";
+                "INNER JOIN users u ON u.User_ID = a.User_ID\n" +
+                "ORDER BY a.Start";
 
         try {
             PreparedStatement ps = getConnection().prepareStatement(getAllAppointments);
