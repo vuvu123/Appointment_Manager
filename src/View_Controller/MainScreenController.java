@@ -1,5 +1,6 @@
 package View_Controller;
 
+import Database.DBAppointments;
 import Model.Appointment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,20 +21,22 @@ public class MainScreenController implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
 
     @FXML private TableColumn<Appointment, Integer> apptIDTableColumn;
-    @FXML private TableColumn<Appointment, String> customerTableColumn;
-    @FXML private TableColumn<Appointment, String> contactTableColumn;
     @FXML private TableColumn<Appointment, String> titleTableColumn;
+    @FXML private TableColumn<Appointment, String> descriptionTableColumn;
     @FXML private TableColumn<Appointment, String> locationTableColumn;
+    @FXML private TableColumn<Appointment, String> contactTableColumn;
     @FXML private TableColumn<Appointment, String> typeTableColumn;
-    @FXML private TableColumn<Appointment, String> dateTableColumn;
-    @FXML private TableColumn<Appointment, String> startTableColumn;
-    @FXML private TableColumn<Appointment, String> endTableColumn;
+    @FXML private TableColumn<Appointment, String> startDateTableColumn;
+    @FXML private TableColumn<Appointment, String> startTimeTableColumn;
+    @FXML private TableColumn<Appointment, String> endDateTableColumn;
+    @FXML private TableColumn<Appointment, String> endTimeTableColumn;
+    @FXML private TableColumn<Appointment, Integer> custIDTableColumn;
 
     @FXML private RadioButton weekViewRadioButton;
     @FXML private RadioButton monthViewRadioButton;
     @FXML private RadioButton allViewRadioButton;
 
-    @FXML private ToggleGroup dateViewToggleGroup;
+    @FXML private ToggleGroup dateViewToggleGroup = new ToggleGroup();
 
     @FXML private DatePicker datePicker;
 
@@ -88,33 +92,39 @@ public class MainScreenController implements Initializable {
     @FXML
     private void weekViewRadioButtonSelected() {
 
-        weekViewRadioButton.setSelected(true);
-        monthViewRadioButton.setSelected(false);
-        allViewRadioButton.setSelected(false);
     }
 
     @FXML
     private void monthViewRadioButtonSelected() {
 
-        weekViewRadioButton.setSelected(false);
-        monthViewRadioButton.setSelected(true);
-        allViewRadioButton.setSelected(false);
     }
 
     @FXML
     private void allViewRadioButtonSelected() {
-
-        weekViewRadioButton.setSelected(false);
-        monthViewRadioButton.setSelected(false);
-        allViewRadioButton.setSelected(true);
+        appointmentsTableView.setItems(DBAppointments.getAllAppointments());
     }
 
     @Override
     public void initialize (URL url, ResourceBundle rb) {
-        // Add radio buttons to toggleGroup
+        apptIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        titleTableColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        descriptionTableColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        locationTableColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        contactTableColumn.setCellValueFactory(new PropertyValueFactory<>("contactName"));
+        typeTableColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        startDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        startTimeTableColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        endDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        endTimeTableColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        custIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+
+        appointmentsTableView.setItems(DBAppointments.getAllAppointments());
+
+        // Add radio buttons added to toggleGroup
         weekViewRadioButton.setToggleGroup(dateViewToggleGroup);
         monthViewRadioButton.setToggleGroup(dateViewToggleGroup);
         allViewRadioButton.setToggleGroup(dateViewToggleGroup);
+        allViewRadioButton.setSelected(true);
     }
 
 }

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="460.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainScreenController">
+<AnchorPane prefHeight="506.0" prefWidth="881.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainScreenController">
    <children>
       <AnchorPane layoutY="115.0" prefHeight="391.0" prefWidth="900.0">
          <children>
@@ -41,7 +41,7 @@
                   <TableColumn fx:id="startTimeTableColumn" prefWidth="81.0" text="Start Time" />
                   <TableColumn fx:id="endDateTableColumn" prefWidth="74.0" text="End Date" />
                   <TableColumn fx:id="endTimeTableColumn" minWidth="0.0" prefWidth="68.0" text="End Time" />
-                  <TableColumn fx:id="custNameTableColumn" prefWidth="52.0" text="Cust ID" />
+                  <TableColumn fx:id="custIDTableColumn" prefWidth="52.0" text="Cust ID" />
                </columns>
             </TableView>
          </children>

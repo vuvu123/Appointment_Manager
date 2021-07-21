@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -72,6 +73,7 @@ public class ModifyAppointmentController implements Initializable {
 
     @FXML
     private void clearButton(ActionEvent event) throws IOException {
+        apptIDTextField.clear();
         titleTextField.clear();
         descriptionTextField.clear();
         locationTextField.clear();
@@ -117,7 +119,38 @@ public class ModifyAppointmentController implements Initializable {
 
     @FXML
     private void saveButton(ActionEvent event) throws IOException {
+        selectedAppt = appointmentsTableView.getSelectionModel().getSelectedItem();
 
+        if (selectedAppt == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to save appointment.");
+            alert.setContentText("No appointment selected! Please select a appointment from the table.");
+            alert.showAndWait();
+        } else {
+            int apptID = Integer.parseInt(apptIDTextField.getText());
+            String title = titleTextField.getText();
+            String description = descriptionTextField.getText();
+            String location = locationTextField.getText();
+            String type = typeTextField.getText();
+            int contactID = contactComboBox.getValue().getContactID();
+            int custID = customerComboBox.getValue().getCustomerID();
+            int userID = userComboBox.getValue().getUserID();
+
+            LocalDate startDate = startDatePicker.getValue();
+            LocalTime startTime = startTimeComboBox.getValue();
+            String startDT = DateTimeConversion.convertLocalDateLocalTimetoUTCString(startDate, startTime);
+            LocalDate endDate = endDatePicker.getValue();
+            LocalTime endTime = endTimeComboBox.getValue();
+            String endDT = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
+
+            DBAppointments.updateAppointment(apptID, title, description, location, type, custID, userID, contactID, startDT, endDT);
+            refreshApptTable();
+            messageLabel.setText("Appointment ID [" + apptID + "] of type [" + type + "] saved.");
+            messageLabel.setVisible(true);
+            clearButton(event);
+            disableFields();
+        }
     }
 
     @FXML
@@ -134,23 +167,25 @@ public class ModifyAppointmentController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Appointment");
             alert.setHeaderText("Confirm Delete Appointment");
-            alert.setContentText("Are you sure you want to delete " + selectedAppt.getAppointmentID() + "?");
+            alert.setContentText("Are you sure you want to delete Appointment ID [" + selectedAppt.getAppointmentID() + "]?");
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == ButtonType.OK) {
                 int apptID = selectedAppt.getAppointmentID();
                 DBAppointments.deleteApptByApptID(apptID);
                 refreshApptTable();
-                messageLabel.setText("Appointment ID " + selectedAppt.getAppointmentID() +
-                        " of type " + selectedAppt.getType() + " deleted.");
+                messageLabel.setText("Appointment ID [" + selectedAppt.getAppointmentID() +
+                        "] of type [" + selectedAppt.getType() + "] deleted.");
                 messageLabel.setVisible(true);
+                disableFields();
                 clearButton(event);
             } else {
-                System.out.println("Delete canceled of AppointmentID " + selectedAppt.getAppointmentID());
+                messageLabel.setText("Delete canceled of AppointmentID [" + selectedAppt.getAppointmentID() + "]");
+                messageLabel.setVisible(true);
+                System.out.println("Delete canceled of AppointmentID [" + selectedAppt.getAppointmentID() + "]");
             }
         }
     }
-
 
     private ObservableList<LocalTime> fillTimeComboBox() {
         ObservableList<LocalTime> timeList = FXCollections.observableArrayList();
@@ -179,6 +214,20 @@ public class ModifyAppointmentController implements Initializable {
         endTimeComboBox.setDisable(false);
         customerComboBox.setDisable(false);
         userComboBox.setDisable(false);
+    }
+
+    private void disableFields() {
+        titleTextField.setDisable(true);
+        descriptionTextField.setDisable(true);
+        locationTextField.setDisable(true);
+        typeTextField.setDisable(true);
+        contactComboBox.setDisable(true);
+        startDatePicker.setDisable(true);
+        startTimeComboBox.setDisable(true);
+        endDatePicker.setDisable(true);
+        endTimeComboBox.setDisable(true);
+        customerComboBox.setDisable(true);
+        userComboBox.setDisable(true);
     }
 
     private void refreshApptTable() {

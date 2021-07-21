@@ -22,7 +22,7 @@ public class DBAppointments {
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         String getAllAppointments = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, cu.Customer_Name, " +
-                "co.Contact_Name, a.Type, a.Start, a.End, u.User_Name\n" +
+                "co.Contact_Name, a.Type, a.Start, a.End, u.User_Name, a.Customer_ID\n" +
                 "FROM appointments a\n" +
                 "INNER JOIN customers cu ON cu.Customer_ID = a.Customer_ID\n" +
                 "INNER JOIN contacts co ON co.Contact_ID = a.Contact_ID\n" +
@@ -43,6 +43,7 @@ public class DBAppointments {
                 appt.setContactName(rs.getString("co.Contact_Name"));
                 appt.setType(rs.getString("a.Type"));
                 appt.setUserName(rs.getString("u.User_Name"));
+                appt.setCustomerID(rs.getInt("a.Customer_ID"));
 
                 LocalDateTime startLDT = rs.getTimestamp("a.Start").toLocalDateTime();
                 // Convert from UTC to systemDefault (User's Local Time)

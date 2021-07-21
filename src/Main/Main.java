@@ -19,7 +19,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/View_Controller/MainScreen.fxml"));
         primaryStage.setTitle("Appointment Management");
 //        primaryStage.setScene(new Scene(root, 600, 400));  // change back after testing
-        primaryStage.setScene(new Scene(root, 800, 550));
+        primaryStage.setScene(new Scene(root, 900, 500));
         primaryStage.show();
     }
 
