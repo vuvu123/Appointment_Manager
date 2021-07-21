@@ -22,11 +22,23 @@ public class DateTimeConversion {
         return lt.format(dtfTime);
     }
 
+    /**
+     * Used for formatting LocalDate and LocalTime to LocalDateTime string and converting
+     * local time to UTC
+     * @param ld
+     * @param lt
+     * @return UTC LocalDateTime as a string
+     */
     public static String convertLocalDateLocalTimetoUTCString(LocalDate ld, LocalTime lt) {
+        System.out.println("Local Date: " + ld + " Local Time: " + lt);
         LocalDateTime ldt = LocalDateTime.of(ld, lt);
-        ZonedDateTime zdt = ldt.atZone(ZoneId.of("UTC"));
-        LocalDateTime utcLDT = zdt.toLocalDateTime();
+        ZonedDateTime ldtZoned = ldt.atZone(ZoneId.systemDefault());
+        ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
+        System.out.println("Zoned Date Time: " + utcZoned);
+        LocalDateTime utcLDT = utcZoned.toLocalDateTime();
+        System.out.println("Local Date Time before format: " + utcLDT);
         DateTimeFormatter dtfDateTime = DateTimeFormatter.ofPattern(dateTimeFormat);
+        System.out.println("Formatted DateTime(to DB): " + utcLDT.format(dtfDateTime) + "\n");
         return utcLDT.format(dtfDateTime);
     }
 }
