@@ -127,7 +127,7 @@ public class ModifyCustomerController implements Initializable {
                 infoLabel.setVisible(true);
                 clearButton(event);
             } else {
-                System.out.println("Deletion of customer " + selectedCust.getName() +" delete cancelled.");
+                System.out.println("Deletion of customer " + selectedCust.getName() +" delete canceled.");
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);

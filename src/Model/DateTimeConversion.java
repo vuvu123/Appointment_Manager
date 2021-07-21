@@ -22,6 +22,16 @@ public class DateTimeConversion {
         return lt.format(dtfTime);
     }
 
+    public static LocalDate convertZDTtoLocalDate(ZonedDateTime zdt) {
+        LocalDateTime ldt = zdt.toLocalDateTime();
+        return ldt.toLocalDate();
+    }
+
+    public static LocalTime convertZDTtoLocalTime(ZonedDateTime zdt) {
+        LocalDateTime ldt = zdt.toLocalDateTime();
+        return ldt.toLocalTime();
+    }
+
     /**
      * Used for formatting LocalDate and LocalTime to LocalDateTime string and converting
      * local time to UTC

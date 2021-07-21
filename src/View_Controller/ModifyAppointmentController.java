@@ -4,10 +4,7 @@ import Database.DBAppointments;
 import Database.DBContacts;
 import Database.DBCustomers;
 import Database.DBUsers;
-import Model.Appointment;
-import Model.Contact;
-import Model.Customer;
-import Model.User;
+import Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,6 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ModifyAppointmentController implements Initializable {
@@ -42,6 +40,7 @@ public class ModifyAppointmentController implements Initializable {
     @FXML private TableColumn<Appointment, String> endTimeTableColumn;
     @FXML private TableColumn<Appointment, String> userTableColumn;
 
+    @FXML private TextField apptIDTextField;
     @FXML private TextField titleTextField;
     @FXML private TextField descriptionTextField;
     @FXML private TextField locationTextField;
@@ -50,8 +49,8 @@ public class ModifyAppointmentController implements Initializable {
     @FXML private ComboBox<Contact> contactComboBox;
     @FXML private ComboBox<Customer> customerComboBox;
     @FXML private ComboBox<User> userComboBox;
-    @FXML private ComboBox startTimeComboBox;
-    @FXML private ComboBox endTimeComboBox;
+    @FXML private ComboBox<LocalTime> startTimeComboBox;
+    @FXML private ComboBox<LocalTime> endTimeComboBox;
 
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
@@ -59,6 +58,7 @@ public class ModifyAppointmentController implements Initializable {
     @FXML private Label messageLabel;
 
     private ObservableList<Appointment> apptsTable = FXCollections.observableArrayList();
+    private static Appointment selectedAppt;
 
     // Handle Buttons
     @FXML
@@ -89,13 +89,68 @@ public class ModifyAppointmentController implements Initializable {
 
     @FXML
     private void modifyButton(ActionEvent event) throws IOException {
+        selectedAppt = appointmentsTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedAppt == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to modify appointment.");
+            alert.setContentText("No appointment selected! Please select an appointment from the table.");
+            alert.showAndWait();
+        } else {
+            enableFields();
+
+            apptIDTextField.setText(String.valueOf(selectedAppt.getAppointmentID()));
+            titleTextField.setText(selectedAppt.getTitle());
+            descriptionTextField.setText(selectedAppt.getDescription());
+            locationTextField.setText(selectedAppt.getLocation());
+            typeTextField.setText(selectedAppt.getType());
+            contactComboBox.setValue(lookUpContact(selectedAppt.getContactName()));
+            customerComboBox.setValue(lookUpCustomer(selectedAppt.getCustName()));
+            userComboBox.setValue(lookUpUser(selectedAppt.getUserName()));
+            startDatePicker.setValue(DateTimeConversion.convertZDTtoLocalDate(selectedAppt.getStart()));
+            endDatePicker.setValue(DateTimeConversion.convertZDTtoLocalDate(selectedAppt.getEnd()));
+            startTimeComboBox.setValue(DateTimeConversion.convertZDTtoLocalTime(selectedAppt.getStart()));
+            endTimeComboBox.setValue(DateTimeConversion.convertZDTtoLocalTime(selectedAppt.getEnd()));
+        }
+    }
+
+    @FXML
+    private void saveButton(ActionEvent event) throws IOException {
 
     }
 
     @FXML
     private void deleteButton(ActionEvent event) throws IOException {
+        selectedAppt = appointmentsTableView.getSelectionModel().getSelectedItem();
 
+        if (selectedAppt == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to delete appointment.");
+            alert.setContentText("No appointment selected! Please select a appointment from the table.");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Appointment");
+            alert.setHeaderText("Confirm Delete Appointment");
+            alert.setContentText("Are you sure you want to delete " + selectedAppt.getAppointmentID() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                int apptID = selectedAppt.getAppointmentID();
+                DBAppointments.deleteApptByApptID(apptID);
+                refreshApptTable();
+                messageLabel.setText("Appointment ID " + selectedAppt.getAppointmentID() +
+                        " of type " + selectedAppt.getType() + " deleted.");
+                messageLabel.setVisible(true);
+                clearButton(event);
+            } else {
+                System.out.println("Delete canceled of AppointmentID " + selectedAppt.getAppointmentID());
+            }
+        }
     }
+
 
     private ObservableList<LocalTime> fillTimeComboBox() {
         ObservableList<LocalTime> timeList = FXCollections.observableArrayList();
@@ -110,6 +165,53 @@ public class ModifyAppointmentController implements Initializable {
         // Does not crash adding last 15 min increment outside of while loop
         timeList.add(LocalTime.of(23, 45));
         return timeList;
+    }
+
+    private void enableFields() {
+        titleTextField.setDisable(false);
+        descriptionTextField.setDisable(false);
+        locationTextField.setDisable(false);
+        typeTextField.setDisable(false);
+        contactComboBox.setDisable(false);
+        startDatePicker.setDisable(false);
+        startTimeComboBox.setDisable(false);
+        endDatePicker.setDisable(false);
+        endTimeComboBox.setDisable(false);
+        customerComboBox.setDisable(false);
+        userComboBox.setDisable(false);
+    }
+
+    private void refreshApptTable() {
+        apptsTable = DBAppointments.getAllAppointments();
+        appointmentsTableView.setItems(apptsTable);
+        appointmentsTableView.refresh();
+    }
+
+    private Contact lookUpContact(String contactName) {
+        for (Contact c : contactComboBox.getItems()) {
+            if (c.getContactName().equals(contactName)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    private Customer lookUpCustomer(String custName) {
+        for (Customer cu : customerComboBox.getItems()) {
+            if (cu.getName().equals(custName)) {
+                return cu;
+            }
+        }
+        return null;
+    }
+
+    private User lookUpUser(String userName) {
+        for (User u : userComboBox.getItems()) {
+            if (u.getUserName().equals(userName)) {
+                return u;
+            }
+        }
+        return null;
     }
 
     @Override

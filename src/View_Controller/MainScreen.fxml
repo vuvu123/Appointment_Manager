@@ -11,46 +11,49 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainScreenController">
+<AnchorPane prefHeight="460.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainScreenController">
    <children>
-      <AnchorPane layoutY="132.0" prefHeight="391.0" prefWidth="800.0">
+      <AnchorPane layoutY="115.0" prefHeight="391.0" prefWidth="900.0">
          <children>
-            <TableView fx:id="appointmentsTableView" layoutX="10.0" layoutY="68.0" prefHeight="314.0" prefWidth="780.0">
-               <columns>
-                  <TableColumn fx:id="apptIDTableColumn" prefWidth="83.0" text="Appt ID" />
-                  <TableColumn fx:id="customerTableColumn" prefWidth="111.0" text="Customer" />
-                  <TableColumn fx:id="titleTableColumn" prefWidth="75.0" text="Title" />
-                  <TableColumn fx:id="locationTableColumn" prefWidth="134.0" text="Location" />
-                  <TableColumn fx:id="typeTableColumn" prefWidth="91.0" text="Type" />
-                  <TableColumn fx:id="dateTableColumn" prefWidth="67.0" text="Date" />
-                  <TableColumn fx:id="startTableColumn" prefWidth="97.0" text="Start Time" />
-                  <TableColumn fx:id="endTableColumn" prefWidth="121.0" text="End Time" />
-               </columns>
-            </TableView>
-            <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="23.0" prefHeight="27.0" prefWidth="623.0" spacing="25.0">
+            <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="23.0" prefHeight="27.0" prefWidth="719.0" spacing="25.0">
                <children>
                   <Label text="Appointments">
                      <font>
                         <Font name="System Italic" size="18.0" />
                      </font>
                   </Label>
-                  <Region prefHeight="27.0" prefWidth="118.0" />
+                  <Region prefHeight="27.0" prefWidth="245.0" />
                   <RadioButton fx:id="weekViewRadioButton" mnemonicParsing="false" onAction="#weekViewRadioButtonSelected" text="View By Week" />
                   <RadioButton fx:id="monthViewRadioButton" mnemonicParsing="false" onAction="#monthViewRadioButtonSelected" text="View By Month" />
                   <RadioButton fx:id="allViewRadioButton" mnemonicParsing="false" onAction="#allViewRadioButtonSelected" text="View All" />
                </children>
             </HBox>
-            <DatePicker fx:id="datePicker" layoutX="645.0" layoutY="24.0" prefHeight="25.0" prefWidth="145.0" />
+            <DatePicker fx:id="datePicker" layoutX="741.0" layoutY="24.0" prefHeight="25.0" prefWidth="145.0" />
+            <TableView fx:id="appointmentsTableView" layoutX="8.0" layoutY="50.0" prefHeight="335.0" prefWidth="884.0">
+               <columns>
+                  <TableColumn fx:id="apptIDTableColumn" prefWidth="53.0" text="Appt ID" />
+                  <TableColumn fx:id="titleTableColumn" prefWidth="94.0" text="Title" />
+                  <TableColumn fx:id="descriptionTableColumn" prefWidth="110.0" text="Description" />
+                  <TableColumn fx:id="locationTableColumn" prefWidth="82.0" text="Location" />
+                  <TableColumn fx:id="contactTableColumn" prefWidth="95.0" text="Contact" />
+                  <TableColumn fx:id="typeTableColumn" prefWidth="101.0" text="Type" />
+                  <TableColumn fx:id="startDateTableColumn" prefWidth="73.0" text="Start Date" />
+                  <TableColumn fx:id="startTimeTableColumn" prefWidth="81.0" text="Start Time" />
+                  <TableColumn fx:id="endDateTableColumn" prefWidth="74.0" text="End Date" />
+                  <TableColumn fx:id="endTimeTableColumn" minWidth="0.0" prefWidth="68.0" text="End Time" />
+                  <TableColumn fx:id="custNameTableColumn" prefWidth="52.0" text="Cust ID" />
+               </columns>
+            </TableView>
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="7.0" prefHeight="132.0" prefWidth="800.0">
+      <AnchorPane layoutY="7.0" prefHeight="111.0" prefWidth="900.0">
          <children>
-            <Label layoutX="206.0" text="Appointment Manager">
+            <Label layoutX="256.0" text="Appointment Manager">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" layoutY="53.0" prefHeight="42.0" prefWidth="787.0" spacing="40.0">
+            <HBox alignment="CENTER" layoutY="53.0" prefHeight="42.0" prefWidth="900.0" spacing="40.0">
                <children>
                   <Button fx:id="addAppointmentButton" mnemonicParsing="false" onAction="#addAppointmentButton" prefHeight="40.0" prefWidth="121.0" text="Add Appointment">
                      <font>

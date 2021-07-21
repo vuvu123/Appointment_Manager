@@ -16,9 +16,6 @@ public class Appointment {
     private final StringProperty description;
     private final StringProperty location;
     private final StringProperty type;
-    private ZonedDateTime start;
-    private ZonedDateTime end;
-
     private final StringProperty custName;
     private final StringProperty contactName;
     private final StringProperty userName;
@@ -26,6 +23,8 @@ public class Appointment {
     private final StringProperty startTime;
     private final StringProperty endDate;
     private final StringProperty endTime;
+    private ZonedDateTime start;
+    private ZonedDateTime end;
 
     public Appointment() {
         this.appointmentID = new SimpleIntegerProperty();

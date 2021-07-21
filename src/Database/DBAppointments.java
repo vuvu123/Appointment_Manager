@@ -55,7 +55,7 @@ public class DBAppointments {
                 LocalDateTime endLDT = rs.getTimestamp("a.End").toLocalDateTime();
                 // Convert from UTC to systemDefault (User's Local Time)
                 ZonedDateTime endZDT = endLDT.atZone(ZoneId.systemDefault());
-                appt.setStart(endZDT);
+                appt.setEnd(endZDT);
 
                 appt.setEndDate(DateTimeConversion.convertZDTtoStringLocalDate(endZDT));
                 appt.setEndTime(DateTimeConversion.convertZDTtoStringLocalTime(endZDT));
@@ -81,13 +81,43 @@ public class DBAppointments {
             ps.setInt(1, customerID);
             int numRowsDeleted = ps.executeUpdate();
 
-            System.out.println(numRowsDeleted + " appointments deleted for customerID " + customerID + ".");
+            System.out.println(numRowsDeleted + " appointment(s) deleted for customerID " + customerID + ".");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Delete appointment by appointment ID.
+     * @param apptID
+     */
+    public static void deleteApptByApptID(int apptID) {
+        String deleteByApptID = "DELETE FROM appointments WHERE Appointment_ID = ?";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(deleteByApptID);
+            ps.setInt(1, apptID);
+            int numRowsDeleted = ps.executeUpdate();
+
+            System.out.println(numRowsDeleted + " appointment(s) deleted for appointmentID " + apptID + ".");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Add new appointment to appointments table
+     * @param title
+     * @param description
+     * @param location
+     * @param type
+     * @param contactID
+     * @param custID
+     * @param startDateTime
+     * @param endDateTime
+     * @param userID
+     */
     public static void addAppointment(String title, String description, String location, String type, int contactID,
                                       int custID, String startDateTime, String endDateTime, int userID) {
         String addApptQuery = "INSERT INTO appointments(Title, Description, Location, Type, Start, End, Customer_ID, " +
@@ -107,7 +137,44 @@ public class DBAppointments {
 
             int numRowsAdded = ps.executeUpdate();
 
-            System.out.println(numRowsAdded + " appointments added.");
+            System.out.println(numRowsAdded + " appointment(s) added.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates appointment in database
+     * @param apptID
+     * @param title
+     * @param description
+     * @param location
+     * @param type
+     * @param custID
+     * @param userID
+     * @param contactID
+     * @param start
+     * @param end
+     */
+    public static void updateAppointment(int apptID, String title, String description, String location, String type,
+                                         int custID, int userID, int contactID, String start, String end) {
+        String updateApptQuery = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, " +
+                "Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(updateApptQuery);
+            ps.setString(1, title);
+            ps.setString(2, description);
+            ps.setString(3, location);
+            ps.setString(4, type);
+            ps.setString(5, start);
+            ps.setString(6, end);
+            ps.setInt(7, custID);
+            ps.setInt(8, userID);
+            ps.setInt(9, contactID);
+            ps.setInt(10, apptID);
+            int numRowsUpdated = ps.executeUpdate();
+            System.out.println(numRowsUpdated + " appointment(s) updated.");
         } catch (Exception e) {
             e.printStackTrace();
         }

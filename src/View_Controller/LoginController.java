@@ -14,8 +14,11 @@ import static Database.DBUsers.verifyCredentials;
 
 import javafx.stage.Stage;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -40,15 +43,27 @@ public class LoginController implements Initializable {
         String user = usernameTextField.getText();
         String pass = passwordTextField.getText();
 
+        FileWriter fw = new FileWriter("login_activity.txt", true);
+        PrintWriter pw = new PrintWriter(fw);
+
         if (verifyCredentials(user, pass)) {
+            // Add log to login_activity text file
+            pw.println(user + " successfully logged in on " + LocalDateTime.now());
+
+            // Change screen to Main Screen
             Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } else {
+            // Add fail log to login_activity text file
+            pw.println(user + " failed logging in on " + LocalDateTime.now());
             errorMessageLabel.setVisible(true);
         }
+        // Close writers
+        fw.close();
+        pw.close();
     }
 
     @Override
