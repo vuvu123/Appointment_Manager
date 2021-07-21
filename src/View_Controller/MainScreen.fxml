@@ -28,7 +28,7 @@
                   <RadioButton fx:id="allViewRadioButton" mnemonicParsing="false" onAction="#allViewRadioButtonSelected" text="View All" />
                </children>
             </HBox>
-            <DatePicker fx:id="datePicker" layoutX="741.0" layoutY="24.0" prefHeight="25.0" prefWidth="145.0" />
+            <DatePicker fx:id="datePicker" layoutX="771.0" layoutY="24.0" prefHeight="25.0" prefWidth="115.0" />
             <TableView fx:id="appointmentsTableView" layoutX="8.0" layoutY="50.0" prefHeight="335.0" prefWidth="884.0">
                <columns>
                   <TableColumn fx:id="apptIDTableColumn" prefWidth="53.0" text="Appt ID" />

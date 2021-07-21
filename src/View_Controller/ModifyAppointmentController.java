@@ -144,6 +144,10 @@ public class ModifyAppointmentController implements Initializable {
             LocalTime endTime = endTimeComboBox.getValue();
             String endDT = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
 
+            // Add time validation which checks if its within business hours (08:00 - 22:00 EST) -> (12:00 - 02:00 UTC)
+            // Add time validation to make sure appointment times don't overlap
+            // Add validation which checks if any fields are null
+
             DBAppointments.updateAppointment(apptID, title, description, location, type, custID, userID, contactID, startDT, endDT);
             refreshApptTable();
             messageLabel.setText("Appointment ID [" + apptID + "] of type [" + type + "] saved.");

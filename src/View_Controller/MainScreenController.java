@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class MainScreenController implements Initializable {
@@ -91,12 +92,19 @@ public class MainScreenController implements Initializable {
     // Handle radio buttons
     @FXML
     private void weekViewRadioButtonSelected() {
+        String filterDate = datePicker.getValue().toString();
+
+        // Run getApptByWeek method
 
     }
 
     @FXML
     private void monthViewRadioButtonSelected() {
+        String filterDate = datePicker.getValue().toString();
 
+        // Run getApptByMonth method
+        appointmentsTableView.setItems(DBAppointments.getApptByMonth(filterDate));
+        appointmentsTableView.refresh();
     }
 
     @FXML
@@ -106,6 +114,8 @@ public class MainScreenController implements Initializable {
 
     @Override
     public void initialize (URL url, ResourceBundle rb) {
+
+        // Populate appointments table
         apptIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         titleTableColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         descriptionTableColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -125,6 +135,10 @@ public class MainScreenController implements Initializable {
         monthViewRadioButton.setToggleGroup(dateViewToggleGroup);
         allViewRadioButton.setToggleGroup(dateViewToggleGroup);
         allViewRadioButton.setSelected(true);
+
+        // Set datePicker to today's date
+        datePicker.setValue(LocalDate.now());
+
     }
 
 }

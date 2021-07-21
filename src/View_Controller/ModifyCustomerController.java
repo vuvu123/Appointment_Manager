@@ -231,7 +231,10 @@ public class ModifyCustomerController implements Initializable {
 
         infoLabel.setVisible(false);
 
-        // Listener action when country comboBox selection is changed
+        /**
+         * Lambda used to create an action on the countryComboBox which changes the firstLevelDivision
+         * comboBox list to the reflect the country selected
+         */
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue.setAssocDivisions(getDivisionsByCountry(newValue.getCountryID()));
