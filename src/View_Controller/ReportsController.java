@@ -129,8 +129,8 @@ public class ReportsController implements Initializable {
 
         // Lambda used to implement the listener which populates the contact schedule table according to the
         // contact selected in the comboBox
-        contactComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            contactSchedTableView.setItems(DBAppointments.getApptByContact(newValue.getContactID()));
+        contactComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldContact, newContact) -> {
+            contactSchedTableView.setItems(DBAppointments.getApptByContact(newContact.getContactID()));
             contactSchedTableView.refresh();
         });
     }
