@@ -120,6 +120,7 @@ public class MainScreenController implements Initializable {
         appointmentsTableView.setItems(DBAppointments.getAllAppointments());
     }
 
+    // Refreshes table if date is changed
     @FXML private void datePickerChanged(ActionEvent event) throws IOException {
         if (weekViewRadioButton.isSelected()) {
             weekViewRadioButtonSelected();
@@ -132,7 +133,6 @@ public class MainScreenController implements Initializable {
 
     @Override
     public void initialize (URL url, ResourceBundle rb) {
-
         // Populate appointments table
         apptIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         titleTableColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -156,7 +156,6 @@ public class MainScreenController implements Initializable {
 
         // Set datePicker to today's date
         datePicker.setValue(LocalDate.now());
-
     }
 
 }

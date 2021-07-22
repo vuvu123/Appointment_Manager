@@ -56,6 +56,8 @@ public class ModifyAppointmentController implements Initializable {
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
 
+    @FXML private Button deleteButton;
+
     @FXML private Label messageLabel;
 
     private ObservableList<Appointment> apptsTable = FXCollections.observableArrayList();
@@ -101,6 +103,7 @@ public class ModifyAppointmentController implements Initializable {
             alert.showAndWait();
         } else {
             enableFields();
+            deleteButton.setDisable(true);
 
             apptIDTextField.setText(String.valueOf(selectedAppt.getAppointmentID()));
             titleTextField.setText(selectedAppt.getTitle());
@@ -154,6 +157,7 @@ public class ModifyAppointmentController implements Initializable {
             messageLabel.setVisible(true);
             clearButton(event);
             disableFields();
+            deleteButton.setDisable(false);
         }
     }
 

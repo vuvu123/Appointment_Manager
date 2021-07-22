@@ -291,4 +291,54 @@ public class DBAppointments {
         }
         return null;
     }
+
+    public static ObservableList<Appointment> getApptByContact(int contactID) {
+        ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+        String getAllAppointments = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, " +
+                "a.Type, a.Start, a.End, a.Customer_ID\n" +
+                "FROM appointments a\n" +
+                "INNER JOIN customers cu ON cu.Customer_ID = a.Customer_ID\n" +
+                "INNER JOIN contacts co ON co.Contact_ID = a.Contact_ID\n" +
+                "WHERE co.Contact_ID = ?\n" +
+                "ORDER BY a.Start";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(getAllAppointments);
+            ps.setInt(1, contactID);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Appointment appt = new Appointment();
+
+                appt.setAppointmentID(rs.getInt("a.Appointment_ID"));
+                appt.setTitle(rs.getString("a.Title"));
+                appt.setDescription(rs.getString("a.Description"));
+                appt.setLocation(rs.getString("a.Location"));
+                appt.setType(rs.getString("a.Type"));
+                appt.setCustomerID(rs.getInt("a.Customer_ID"));
+
+                LocalDateTime startLDT = rs.getTimestamp("a.Start").toLocalDateTime();
+                // Convert from UTC to systemDefault (User's Local Time)
+                ZonedDateTime startZDT = startLDT.atZone(ZoneId.systemDefault());
+                appt.setStart(startZDT);
+
+                appt.setStartDate(DateTimeConversion.convertZDTtoStringLocalDate(startZDT));
+                appt.setStartTime(DateTimeConversion.convertZDTtoStringLocalTime(startZDT));
+
+                LocalDateTime endLDT = rs.getTimestamp("a.End").toLocalDateTime();
+                // Convert from UTC to systemDefault (User's Local Time)
+                ZonedDateTime endZDT = endLDT.atZone(ZoneId.systemDefault());
+                appt.setEnd(endZDT);
+
+                appt.setEndDate(DateTimeConversion.convertZDTtoStringLocalDate(endZDT));
+                appt.setEndTime(DateTimeConversion.convertZDTtoStringLocalTime(endZDT));
+
+                allAppointments.add(appt);
+            }
+            return allAppointments;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
