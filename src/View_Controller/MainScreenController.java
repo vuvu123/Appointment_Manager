@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class MainScreenController implements Initializable {
@@ -89,27 +92,42 @@ public class MainScreenController implements Initializable {
         stage.show();
     }
 
-    // Handle radio buttons
+    // Filter appointments table by week
     @FXML
     private void weekViewRadioButtonSelected() {
-        String filterDate = datePicker.getValue().toString();
+        LocalDate filterDate = datePicker.getValue();
+        String year = String.valueOf(filterDate.getYear());
+        int weekOfYear = filterDate.get(WeekFields.of(Locale.US).weekOfYear());
 
-        // Run getApptByWeek method
-
-    }
-
-    @FXML
-    private void monthViewRadioButtonSelected() {
-        String filterDate = datePicker.getValue().toString();
-
-        // Run getApptByMonth method
-        appointmentsTableView.setItems(DBAppointments.getApptByMonth(filterDate));
+        appointmentsTableView.setItems(DBAppointments.getApptByWeek(weekOfYear, year));
         appointmentsTableView.refresh();
     }
 
+    // Filter appointments table by month
+    @FXML
+    private void monthViewRadioButtonSelected() {
+        String filterDate = datePicker.getValue().toString();
+        String month = filterDate.substring(5, 7);
+        String year = filterDate.substring(0, 4);
+
+        appointmentsTableView.setItems(DBAppointments.getApptByMonth(month, year));
+        appointmentsTableView.refresh();
+    }
+
+    // Show all appointments in table
     @FXML
     private void allViewRadioButtonSelected() {
         appointmentsTableView.setItems(DBAppointments.getAllAppointments());
+    }
+
+    @FXML private void datePickerChanged(ActionEvent event) throws IOException {
+        if (weekViewRadioButton.isSelected()) {
+            weekViewRadioButtonSelected();
+        } else if (monthViewRadioButton.isSelected()) {
+            monthViewRadioButtonSelected();
+        } else {
+            allViewRadioButtonSelected();
+        }
     }
 
     @Override

@@ -43,6 +43,10 @@ public class ModifyCustomerController implements Initializable {
     @FXML private TextField phoneNumberTextField;
     @FXML private TextField searchTextField;
 
+    @FXML private Button clearSearchFieldButton;
+    @FXML private Button searchButton;
+    @FXML private Button deleteButton;
+
     @FXML private Label infoLabel;
 
     @FXML private ComboBox<FirstLevelDivision> firstLevelDivisionComboBox;
@@ -99,6 +103,8 @@ public class ModifyCustomerController implements Initializable {
             // Need to add validation for blank fields
             DBCustomers.updateCustomer(custID, custName, address, postalCode, phone, divID);
             updateCustomersTable();
+            enableFieldsOnSave();
+            clearButton(event);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
@@ -144,6 +150,7 @@ public class ModifyCustomerController implements Initializable {
 
         if (selectedCust != null) {
             enableFields();
+            disableFieldsOnModify();
 
             customerIDTextField.setText(String.valueOf(selectedCust.getCustomerID()));
             customerNameTextField.setText(selectedCust.getName());
@@ -207,6 +214,20 @@ public class ModifyCustomerController implements Initializable {
         phoneNumberTextField.setDisable(false);
         firstLevelDivisionComboBox.setDisable(false);
         countryComboBox.setDisable(false);
+    }
+
+    private void disableFieldsOnModify() {
+        clearSearchFieldButton.setDisable(true);
+        deleteButton.setDisable(true);
+        searchTextField.setDisable(true);
+        searchButton.setDisable(true);
+    }
+
+    private void enableFieldsOnSave() {
+        clearSearchFieldButton.setDisable(false);
+        deleteButton.setDisable(false);
+        searchTextField.setDisable(false);
+        searchButton.setDisable(false);
     }
 
     @Override
