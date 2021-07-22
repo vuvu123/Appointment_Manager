@@ -77,7 +77,6 @@ public class LoginController implements Initializable {
         passwordLabel.setText(rb.getString("password"));
         submitButton.setText(rb.getString("submitButton"));
         errorMessageLabel.setText(rb.getString("errorLabel"));
-
     }
 
 }
