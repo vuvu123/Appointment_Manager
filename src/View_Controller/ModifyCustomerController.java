@@ -68,6 +68,7 @@ public class ModifyCustomerController implements Initializable {
 
     @FXML
     private void clearButton(ActionEvent event) throws IOException {
+        customerIDTextField.setText("");
         customerNameTextField.setText("");
         addressTextField.setText("");
         postalCodeTextField.setText("");
@@ -100,16 +101,24 @@ public class ModifyCustomerController implements Initializable {
             String phone = phoneNumberTextField.getText();
             int divID = firstLevelDivisionComboBox.getValue().getDivisionID();
 
-            // Need to add validation for blank fields
-            DBCustomers.updateCustomer(custID, custName, address, postalCode, phone, divID);
-            updateCustomersTable();
-            enableFieldsOnSave();
-            clearButton(event);
+            if (custName.isEmpty() || address.isEmpty() || postalCode.isEmpty() || phone.isEmpty() || String.valueOf(divID).isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setHeaderText("Unable to add customer.");
+                alert.setContentText("Please fill out all input fields.");
+                alert.showAndWait();
+            } else {
+                DBCustomers.updateCustomer(custID, custName, address, postalCode, phone, divID);
+                updateCustomersTable();
+                enableFieldsOnSave();
+                clearButton(event);
+                disableFieldsOnSave();
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
-            alert.setHeaderText("Unable to save product.");
-            alert.setContentText("No customer selected! Please select a customer from the table.");
+            alert.setHeaderText("No customer selected!");
+            alert.setContentText("Please select a customer from the table and click modify.");
             alert.showAndWait();
         }
     }
@@ -149,7 +158,7 @@ public class ModifyCustomerController implements Initializable {
         selectedCust = customersTableView.getSelectionModel().getSelectedItem();
 
         if (selectedCust != null) {
-            enableFields();
+            enableFieldsOnModify();
             disableFieldsOnModify();
 
             customerIDTextField.setText(String.valueOf(selectedCust.getCustomerID()));
@@ -207,7 +216,7 @@ public class ModifyCustomerController implements Initializable {
         customersTableView.refresh();
     }
 
-    private void enableFields() {
+    private void enableFieldsOnModify() {
         customerNameTextField.setDisable(false);
         addressTextField.setDisable(false);
         postalCodeTextField.setDisable(false);
@@ -228,6 +237,15 @@ public class ModifyCustomerController implements Initializable {
         deleteButton.setDisable(false);
         searchTextField.setDisable(false);
         searchButton.setDisable(false);
+    }
+
+    private void disableFieldsOnSave() {
+        customerNameTextField.setDisable(true);
+        addressTextField.setDisable(true);
+        postalCodeTextField.setDisable(true);
+        phoneNumberTextField.setDisable(true);
+        firstLevelDivisionComboBox.setDisable(true);
+        countryComboBox.setDisable(true);
     }
 
     @Override
@@ -260,6 +278,7 @@ public class ModifyCustomerController implements Initializable {
             if (newValue != null) {
                 newValue.setAssocDivisions(getDivisionsByCountry(newValue.getCountryID()));
                 firstLevelDivisionComboBox.setItems(newValue.getAssocDivisions());
+                firstLevelDivisionComboBox.getSelectionModel().selectFirst();
             }
         });
     }

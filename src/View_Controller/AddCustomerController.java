@@ -86,9 +86,17 @@ public class AddCustomerController implements Initializable {
         String phone = phoneNumberTextField.getText();
         int divID = firstLevelDivisionComboBox.getValue().getDivisionID();
 
-        DBCustomers.addCustomer(custName, address, postalCode, phone, divID);
-        updateCustomersTable();
-        clearButton(event);
+        if (custName.isEmpty() || address.isEmpty() || postalCode.isEmpty() || phone.isEmpty() || String.valueOf(divID).isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to add customer.");
+            alert.setContentText("Please fill out all input fields.");
+            alert.showAndWait();
+        } else {
+            DBCustomers.addCustomer(custName, address, postalCode, phone, divID);
+            updateCustomersTable();
+            clearButton(event);
+        }
     }
 
     private ObservableList<Customer> lookUpCustomer(String custName) {
@@ -132,13 +140,14 @@ public class AddCustomerController implements Initializable {
         countryComboBox.setItems(DBCountries.getAllCountries());
         countryComboBox.getSelectionModel().selectFirst();
         firstLevelDivisionComboBox.setItems(getDivisionsByCountry(1));
+        firstLevelDivisionComboBox.getSelectionModel().selectFirst();
 
         // Listener action when country comboBox selection is changed
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue != null) {
-                System.out.println("Country ID: " + newValue.getCountryID());
                 newValue.setAssocDivisions(getDivisionsByCountry(newValue.getCountryID()));
                 firstLevelDivisionComboBox.setItems(newValue.getAssocDivisions());
+                firstLevelDivisionComboBox.getSelectionModel().selectFirst();
             }
         });
 
