@@ -84,15 +84,17 @@ public class AddCustomerController implements Initializable {
         String address = addressTextField.getText();
         String postalCode = postalCodeTextField.getText();
         String phone = phoneNumberTextField.getText();
-        int divID = firstLevelDivisionComboBox.getValue().getDivisionID();
+        boolean isDivisionEmpty = firstLevelDivisionComboBox.getValue() == null;
 
-        if (custName.isEmpty() || address.isEmpty() || postalCode.isEmpty() || phone.isEmpty() || String.valueOf(divID).isEmpty()) {
+        if (custName.isEmpty() || address.isEmpty() || postalCode.isEmpty() || phone.isEmpty() || isDivisionEmpty) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("Unable to add customer.");
             alert.setContentText("Please fill out all input fields.");
             alert.showAndWait();
         } else {
+            int divID = firstLevelDivisionComboBox.getValue().getDivisionID();
+
             DBCustomers.addCustomer(custName, address, postalCode, phone, divID);
             updateCustomersTable();
             clearButton(event);
