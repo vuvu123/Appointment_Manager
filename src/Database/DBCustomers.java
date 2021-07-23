@@ -131,7 +131,7 @@ public class DBCustomers {
      * @param phone
      * @param divID
      */
-    public static void updateCustomer(int custID, String name, String address, String postalCode, String phone, int divID) {
+    public static void updateCustomer(String custID, String name, String address, String postalCode, String phone, int divID) {
         String updateCustQuery = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, " +
                 "Phone = ?, Division_ID = ? WHERE Customer_ID = ?";
 
@@ -142,7 +142,7 @@ public class DBCustomers {
             ps.setString(3, postalCode);
             ps.setString(4, phone);
             ps.setInt(5, divID);
-            ps.setInt(6, custID);
+            ps.setString(6, custID);
             int numRowsUpdated = ps.executeUpdate();
             System.out.println(numRowsUpdated + " customer(s) updated.");
 
