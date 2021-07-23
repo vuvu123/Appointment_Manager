@@ -143,6 +143,11 @@ public class AddCustomerController implements Initializable {
         firstLevelDivisionComboBox.getSelectionModel().selectFirst();
 
         // Listener action when country comboBox selection is changed
+        /**
+         * Discussion of lambda
+         * Implemented countryComboBox with a listener that updates the firstLevelDivision comboBox list corresponding
+         * to the appropriate country
+         */
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue.setAssocDivisions(getDivisionsByCountry(newValue.getCountryID()));

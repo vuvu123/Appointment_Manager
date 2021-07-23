@@ -156,6 +156,7 @@ public class MainScreenController implements Initializable {
 
         // Set datePicker to today's date
         datePicker.setValue(LocalDate.now());
+
     }
 
 }

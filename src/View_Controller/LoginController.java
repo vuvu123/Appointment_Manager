@@ -48,7 +48,7 @@ public class LoginController implements Initializable {
 
         if (verifyCredentials(user, pass)) {
             // Add log to login_activity text file
-            pw.println(user + " successfully logged in on " + LocalDateTime.now());
+            pw.println("User " + user + " successfully logged in on " + LocalDateTime.now());
 
             // Change screen to Main Screen
             Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
@@ -56,9 +56,11 @@ public class LoginController implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.show();
+
+            // Add alert to display if there is an appointment within 15 minutes of user's log in
         } else {
             // Add fail log to login_activity text file
-            pw.println(user + " failed logging in on " + LocalDateTime.now());
+            pw.println("User " + user + " failed logging in on " + LocalDateTime.now());
             errorMessageLabel.setVisible(true);
         }
         // Close writers

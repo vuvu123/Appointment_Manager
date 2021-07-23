@@ -16,15 +16,15 @@
    <children>
       <AnchorPane layoutX="1.0" prefHeight="363.0" prefWidth="800.0">
          <children>
-            <TableView fx:id="customersTableView" layoutX="10.0" layoutY="72.0" prefHeight="264.0" prefWidth="780.0">
+            <TableView fx:id="customersTableView" layoutX="4.0" layoutY="72.0" prefHeight="264.0" prefWidth="792.0">
                <columns>
-                  <TableColumn fx:id="customerIDTableColumn" prefWidth="83.0" text="Customer ID" />
-                  <TableColumn fx:id="customerNameTableColumn" prefWidth="109.0" text="Customer Name" />
-                  <TableColumn fx:id="customerAddressTableColumn" prefWidth="201.0" text="Address" />
+                  <TableColumn fx:id="customerIDTableColumn" prefWidth="39.0" text="ID" />
+                  <TableColumn fx:id="customerNameTableColumn" prefWidth="145.0" text="Customer Name" />
+                  <TableColumn fx:id="customerAddressTableColumn" prefWidth="209.0" text="Address" />
                   <TableColumn fx:id="postalCodeTableColumn" prefWidth="77.0" text="Postal Code" />
                   <TableColumn fx:id="phoneTableColumn" prefWidth="130.0" text="Phone" />
                   <TableColumn fx:id="divisionTableColumn" prefWidth="125.0" text="First Level Division" />
-                  <TableColumn fx:id="countryTableColumn" prefWidth="53.0" text="Country" />
+                  <TableColumn fx:id="countryTableColumn" prefWidth="65.0" text="Country" />
                </columns>
             </TableView>
             <Label layoutX="269.0" text="Modify Customer">
@@ -37,7 +37,7 @@
             <Button fx:id="searchButton" layoutX="738.0" layoutY="45.0" mnemonicParsing="false" onAction="#searchButton" text="Search" />
             <Button fx:id="clearSearchFieldButton" layoutX="536.0" layoutY="45.0" mnemonicParsing="false" onAction="#clearSearchFieldButton" text="X" />
             <Button fx:id="modifyButton" layoutX="672.0" layoutY="337.0" mnemonicParsing="false" onAction="#modifyButton" prefHeight="25.0" prefWidth="58.0" text="Modify" />
-            <Label fx:id="infoLabel" layoutX="16.0" layoutY="335.0" prefHeight="25.0" prefWidth="638.0" text="Message" textFill="RED" />
+            <Label fx:id="infoLabel" layoutX="5.0" layoutY="335.0" prefHeight="25.0" prefWidth="649.0" text="Message" textFill="RED" />
          </children>
       </AnchorPane>
       <GridPane layoutX="123.0" layoutY="364.0" prefHeight="198.0" prefWidth="523.0">

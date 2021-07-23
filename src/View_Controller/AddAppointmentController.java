@@ -100,9 +100,13 @@ public class AddAppointmentController implements Initializable {
         LocalTime endTime = endTimeComboBox.getValue();
         String endDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
 
-        // Add time validation which checks if its within business hours (08:00 - 22:00 EST) -> (12:00 - 02:00 UTC)
+        // Add validation which checks if any fields are null or endDateTime is before startDateTime
+        // or startDateTime = endDateTime
+
+
+        // Add time validation which checks if its within business hours (5:00 - 19:00 PST) -> (08:00 - 22:00 EST) -> (12:00 - 02:00 UTC)
         // Add time validation to make sure appointment times don't overlap
-        // Add validation which checks if any fields are null
+
 
         DBAppointments.addAppointment(title, description, location, type, contactID, custID, startDateTime, endDateTime, user);
         refreshApptTable();

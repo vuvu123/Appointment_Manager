@@ -57,7 +57,7 @@ public class ReportsController implements Initializable {
     @FXML
     private void apptTypePerMonthReport(ActionEvent event) throws IOException {
         StringBuilder sb = new StringBuilder();
-        sb.append("Description: Count of customer appointments grouped by type and month.\n");
+        sb.append("Description: Count of appointments grouped by type and month.\n");
         sb.append("-----------------------------------------------------------------------------------------\n");
 
         String apptTypePerMonthQuery = "SELECT MONTHNAME(Start) AS Month, Type, COUNT(*) AS ApptCount\n" +
@@ -83,6 +83,8 @@ public class ReportsController implements Initializable {
     @FXML
     private void numApptByCust(ActionEvent event) throws IOException {
         StringBuilder sb = new StringBuilder();
+        sb.append("Description: Total count of appointments scheduled for each customer.\n");
+        sb.append("-----------------------------------------------------------------------------------------\n");
         String numApptPerCustQuery = "SELECT count(*) AS ApptCount, c.Customer_Name\n" +
                                     "FROM appointments a\n" +
                                     "INNER JOIN customers c ON c.Customer_ID = a.Customer_ID\n" +
@@ -120,18 +122,23 @@ public class ReportsController implements Initializable {
         endTimeTableColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         custIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
 
-        // Populate combo box
-        contactComboBox.setItems(Database.DBContacts.getAllContacts());
-
-        // Add radiobuttons to table group
+        // Add radio buttons to toggle group
         apptTypePerMonthRadio.setToggleGroup(reportToggleGroup);
         numApptByCust.setToggleGroup(reportToggleGroup);
 
-        // Lambda used to implement the listener which populates the contact schedule table according to the
-        // contact selected in the comboBox
+        // Populate combo box
+        contactComboBox.setItems(Database.DBContacts.getAllContacts());
+
+        /**
+         * Lambda used to implement a listener which populates the contact schedule table reflecting the
+         * contact selected in the comboBox
+         */
         contactComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldContact, newContact) -> {
             contactSchedTableView.setItems(DBAppointments.getApptByContact(newContact.getContactID()));
             contactSchedTableView.refresh();
         });
+
+        contactComboBox.getSelectionModel().selectFirst();
+
     }
 }
