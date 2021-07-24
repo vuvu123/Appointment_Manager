@@ -366,17 +366,48 @@ public class DBAppointments {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Appointment!");
             alert.setHeaderText("Upcoming Appointment!");
-            alert.setContentText("Starting soon!\nAppointment ID: " + apptID + " , Starting at " + formatLDT(start));
+            alert.setContentText("Starting soon!\nAppointment ID: " + apptID + " , Starting at: " + formatLDT(start));
             alert.showAndWait();
 
         } catch (Exception e) {
             System.out.println("No appointment in next 15 minutes.");
-            // Upcoming Appointment Alert
+
+            // Freedom Alert
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("You are free!");
             alert.setHeaderText("No Upcoming Appointment!");
             alert.setContentText("No upcoming appointments within the next 15 minutes.");
             alert.showAndWait();
+        }
+    }
+
+    public static boolean checkOverlappingAppts(int custID, String start, String end) {
+        String checkApptOverlapQuery = "SELECT Start, Customer_ID FROM appointments WHERE Customer_ID = ?\n" +
+                                        "AND (Start >= ? AND End <= ?)\n" +
+                                        "OR (Start <= ? AND End >= ?)\n" +
+                                        "OR (Start BETWEEN ? AND ? OR End BETWEEN ? AND ?)";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(checkApptOverlapQuery);
+            ps.setInt(1, custID);
+            ps.setString(2, start);
+            ps.setString(3, end);
+            ps.setString(4, start);
+            ps.setString(5, end);
+            ps.setString(6, start);
+            ps.setString(7, end);
+            ps.setString(8, start);
+            ps.setString(9, end);
+//            boolean isOverlappingAppt = ps.execute();
+//            System.out.println(isOverlappingAppt);
+//            return isOverlappingAppt;
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            System.out.println(rs.getInt("Customer_ID"));
+            return true;
+        } catch (Exception e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+            return false;
         }
     }
 }

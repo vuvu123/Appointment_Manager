@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.*;
 import java.util.ResourceBundle;
+import static Model.DateTimeConversion.userLocalTZtoUTC;
+import static Model.DateTimeConversion.convertLocalDateLocalTimetoUTCString;
+import static Database.DBAppointments.checkOverlappingAppts;
 
 public class AddAppointmentController implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
@@ -83,6 +86,65 @@ public class AddAppointmentController implements Initializable {
 
     @FXML
     private void addButton(ActionEvent event) throws IOException {
+        // Error alert if any fields are empty
+        if (areFieldsEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to add appointment.");
+            alert.setContentText("Please fill out all input fields.");
+            alert.showAndWait();
+
+            return;
+        }
+
+        // Date time
+        LocalDate startDate = startDatePicker.getValue();
+        LocalTime startTime = startTimeComboBox.getValue();
+
+        LocalDate endDate = endDatePicker.getValue();
+        LocalTime endTime = endTimeComboBox.getValue();
+
+        LocalDateTime startDT = LocalDateTime.of(startDate, startTime);
+        LocalDateTime endDT = LocalDateTime.of(endDate, endTime);
+
+
+        // Alert if end is scheduled before start
+        if (endDT.isBefore(startDT)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to add appointment.");
+            alert.setContentText("Appointment end time can't be before start time.");
+            alert.showAndWait();
+
+            return;
+        }
+
+        // Alert if start and end are equal
+        if (endDT.equals(startDT)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to add appointment.");
+            alert.setContentText("Appointment start and end time can't be equal!");
+            alert.showAndWait();
+
+            return;
+        }
+
+        // Alert if appointment scheduled outside of business hours
+        if (!isDuringBusinessHours(startDT, endDT)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to add appointment.");
+            alert.setContentText("Appointment must be during business hours!");
+            alert.showAndWait();
+
+            return;
+        }
+
+        // Convert system default time zone to UTC time zone (for DB query)
+        String startDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(startDate, startTime);
+        String endDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
+
         String title = titleTextField.getText();
         String description = descriptionTextField.getText();
         String location = locationTextField.getText();
@@ -91,26 +153,53 @@ public class AddAppointmentController implements Initializable {
         int custID = customerComboBox.getValue().getCustomerID();
         int user = userComboBox.getValue().getUserID();
 
-        // Date time
-        LocalDate startDate = startDatePicker.getValue();
-        LocalTime startTime = startTimeComboBox.getValue();
-        String startDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(startDate, startTime);
+        // Business hours (5:00 - 19:00 PST) -> (08:00 - 22:00 EST) -> (12:00 - 02:00 UTC)
+        // Add time validation to make sure appointment times don't overlap for selected customer
+        if (!checkOverlappingAppts(custID,convertLocalDateLocalTimetoUTCString(startDate, startTime), convertLocalDateLocalTimetoUTCString(endDate, endTime))) {
+            DBAppointments.addAppointment(title, description, location, type, contactID, custID, startDateTime, endDateTime, user);
+            refreshApptTable();
+            clearButton(event);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Unable to add appointment.");
+            alert.setContentText("The customer is already booked for that time.\nPlease try a different time.");
+            alert.showAndWait();
+        }
+    }
 
-        LocalDate endDate = endDatePicker.getValue();
-        LocalTime endTime = endTimeComboBox.getValue();
-        String endDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
+    private boolean isDuringBusinessHours(LocalDateTime start, LocalDateTime end) {
+        // Convert from local time to UTC
+        LocalDateTime utcStart = userLocalTZtoUTC(start);
+        LocalDateTime utcEnd = userLocalTZtoUTC(end);
 
-        // Add validation which checks if any fields are null or endDateTime is before startDateTime
-        // or startDateTime = endDateTime
+        LocalTime utcStartTime = utcStart.toLocalTime();
+        LocalTime utcEndTime = utcEnd.toLocalTime();
 
+        System.out.println("UTC start: " + utcStartTime + "| UTC end: " + utcEndTime);
 
-        // Add time validation which checks if its within business hours (5:00 - 19:00 PST) -> (08:00 - 22:00 EST) -> (12:00 - 02:00 UTC)
-        // Add time validation to make sure appointment times don't overlap
+        if ((utcStartTime.isAfter(LocalTime.of(11,59)) || (utcStartTime.isBefore(LocalTime.of(2,0)) && (utcEndTime.isAfter(LocalTime.of(11,59)) || utcEndTime.isBefore(LocalTime.of(2, 0)))))){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    private boolean areFieldsEmpty(){
+        boolean isContactEmpty = contactComboBox.getValue() == null;
+        boolean isCustEmpty = customerComboBox.getValue() == null;
+        boolean isStartDateEmpty = startDatePicker.getValue() == null;
+        boolean isStartTimeEmpty = startTimeComboBox.getValue() == null;
+        boolean isEndDateEmpty = endDatePicker.getValue() == null;
+        boolean isEndTimeEmpty = endTimeComboBox.getValue() == null;
 
-        DBAppointments.addAppointment(title, description, location, type, contactID, custID, startDateTime, endDateTime, user);
-        refreshApptTable();
-        clearButton(event);
+        if (titleTextField.getText().isEmpty() || descriptionTextField.getText().isEmpty() ||
+                locationTextField.getText().isEmpty() || typeTextField.getText().isEmpty() ||
+                isContactEmpty || isCustEmpty || isStartDateEmpty || isStartTimeEmpty ||
+                isEndDateEmpty || isEndTimeEmpty) {
+            return true;
+        }
+        return false;
     }
 
     private ObservableList<LocalTime> fillTimeComboBox() {
@@ -160,5 +249,9 @@ public class AddAppointmentController implements Initializable {
         userComboBox.setItems(DBUsers.getAllUsers());
         startTimeComboBox.setItems(fillTimeComboBox());
         endTimeComboBox.setItems(fillTimeComboBox());
+
+        // Populate datePickers
+        startDatePicker.setValue(LocalDate.now());
+        endDatePicker.setValue(LocalDate.now());
     }
 }

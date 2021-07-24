@@ -63,9 +63,8 @@ public class LoginController implements Initializable {
             stage.setScene(scene);
             stage.show();
 
+            // Check if there are any upcoming appointments within the next 15 minutes.
             DBAppointments.lookUpApptsInFifteen(currentUser.getUserID());
-
-
         } else {
             // Add fail log to login_activity text file
             pw.println("User " + user + " failed logging in on " + LocalDateTime.now());

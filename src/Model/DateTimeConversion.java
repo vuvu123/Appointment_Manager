@@ -72,4 +72,14 @@ public class DateTimeConversion {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateTimeFormat);
         return ldt.format(dtf);
     }
+
+    /**
+     * Converts User local time zone to UTC time zone
+     * @param ldt variable
+     * @return
+     */
+    public static LocalDateTime userLocalTZtoUTC(LocalDateTime ldt) {
+        LocalDateTime newLDT = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
+        return newLDT;
+    }
 }
