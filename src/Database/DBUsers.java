@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 
 import static Database.DBConnection.getConnection;
 
+/** All SQL queries associated with Users */
 public class DBUsers {
     /**
      * Verifies username and password with database

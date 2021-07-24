@@ -3,6 +3,7 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/** Holds all country objects variables */
 public class Country {
     private int countryID;
     private String country;

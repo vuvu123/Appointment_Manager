@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import static Database.DBFirstLevelDivision.getDivisionsByCountry;
+import static Model.Alerts.custErrorAlert;
 
+/** Controls add customer screen */
 public class AddCustomerController implements Initializable {
     @FXML private TableView<Customer> customersTableView;
 
@@ -45,7 +47,11 @@ public class AddCustomerController implements Initializable {
 
     private ObservableList<Customer> custTableView = FXCollections.observableArrayList();
 
-    // Handle buttons
+    /**
+     * Handles cancel button, returns to MainScreen scene
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void cancelButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
@@ -55,6 +61,11 @@ public class AddCustomerController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Handles clear button, clears user input fields
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void clearButton(ActionEvent event) throws IOException {
         customerNameTextField.setText("");
@@ -65,6 +76,11 @@ public class AddCustomerController implements Initializable {
         firstLevelDivisionComboBox.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Handles clearSarchField button, clears field and refreshes customer table view
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void clearSearchFieldButton(ActionEvent event) throws IOException {
         searchTextField.setText("");
@@ -72,12 +88,22 @@ public class AddCustomerController implements Initializable {
         customersTableView.refresh();
     }
 
+    /**
+     * Handles search button, searches by customer name, displays customer list on table
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void searchButton(ActionEvent event) throws IOException {
         customersTableView.setItems(lookUpCustomer(searchTextField.getText()));
         customersTableView.refresh();
     }
 
+    /**
+     * handles add button: if fields not null, then add customer to customers table
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void addButton(ActionEvent event) throws IOException {
         String custName = customerNameTextField.getText();
@@ -87,11 +113,7 @@ public class AddCustomerController implements Initializable {
         boolean isDivisionEmpty = firstLevelDivisionComboBox.getValue() == null;
 
         if (custName.isEmpty() || address.isEmpty() || postalCode.isEmpty() || phone.isEmpty() || isDivisionEmpty) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Unable to add customer.");
-            alert.setContentText("Please fill out all input fields.");
-            alert.showAndWait();
+            custErrorAlert("add", "Please fill out all input fields.");
         } else {
             int divID = firstLevelDivisionComboBox.getValue().getDivisionID();
 
@@ -101,6 +123,11 @@ public class AddCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Looks up customer by name in customer table view
+     * @param custName searched variable
+     * @return List of customer objects
+     */
     private ObservableList<Customer> lookUpCustomer(String custName) {
         String sanitizedCustName = custName.toLowerCase().trim();
 
@@ -116,13 +143,22 @@ public class AddCustomerController implements Initializable {
         return null;
     }
 
-    // Refresh customersTableView
+    /**
+     * Updates observableList custTableView and refreshes table
+     */
     private void updateCustomersTable() {
         custTableView = DBCustomers.getCustomers();
         customersTableView.setItems(custTableView);
         customersTableView.refresh();
     }
 
+    /**
+     * Used Lambda to implement countryComboBox with a listener that updates the firstLevelDivision comboBox list
+     * corresponding to the appropriate country
+     * Populate customers table and comboboxes
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         custTableView = DBCustomers.getCustomers();
@@ -144,12 +180,7 @@ public class AddCustomerController implements Initializable {
         firstLevelDivisionComboBox.setItems(getDivisionsByCountry(1));
         firstLevelDivisionComboBox.getSelectionModel().selectFirst();
 
-        // Listener action when country comboBox selection is changed
-        /**
-         * Discussion of lambda
-         * Implemented countryComboBox with a listener that updates the firstLevelDivision comboBox list corresponding
-         * to the appropriate country
-         */
+        // LAMBDA: Listener updates firstLevelDivision list by country selected
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue.setAssocDivisions(getDivisionsByCountry(newValue.getCountryID()));

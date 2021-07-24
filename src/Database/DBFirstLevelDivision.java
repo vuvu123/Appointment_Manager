@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 
 import static Database.DBConnection.getConnection;
 
+/** All SQL queries associated with FirstLevelDivisions */
 public class DBFirstLevelDivision {
     /**
      * Query to return list of first level divisions by country ID

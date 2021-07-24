@@ -1,5 +1,6 @@
 package Model;
 
+/** Holds all FirstLevelDivision object variables */
 public class FirstLevelDivision {
     private int divisionID;
     private String division;

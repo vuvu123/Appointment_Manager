@@ -1,5 +1,6 @@
 package Model;
 
+/** Holds all contact objects variables */
 public class Contact {
     private int contactID;
     private String contactName;

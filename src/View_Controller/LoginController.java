@@ -27,6 +27,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/** Controls login screen */
 public class LoginController implements Initializable {
     @FXML private TextField usernameTextField;
     @FXML private TextField passwordTextField;
@@ -42,6 +43,12 @@ public class LoginController implements Initializable {
     private Locale userLocale;
     private ResourceBundle rb;
 
+    /**
+     * Handles submit button: validates user/pass, adds login log to login_activity.txt,
+     * Checks if upcoming appointment for user is within 15 minutes, then displays appropriate alert on MainScreen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void submitButton(ActionEvent event) throws IOException {
         String user = usernameTextField.getText();
@@ -75,6 +82,11 @@ public class LoginController implements Initializable {
         pw.close();
     }
 
+    /**
+     * Displays user's ZoneId, labels are translated to user's locale language
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userLocale = Locale.getDefault();

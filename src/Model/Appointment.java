@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.time.ZonedDateTime;
 
+/** Holds all appointment objects variables */
 public class Appointment {
     private final IntegerProperty appointmentID;
     private final IntegerProperty customerID;
@@ -240,14 +241,4 @@ public class Appointment {
         this.endTime.set(endTime);
     }
 
-    // Was used for testing - Remove later.
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(this.appointmentID + " | " + this.title + " | " + this.description + " | " + this.location + " | ");
-//        sb.append(this.custName + " | " + this.contactName + " | " + this.type + " | ");
-//        sb.append("Start Date/Time: " + this.startDate + " " + this.startTime + " | End Date/Time: " + this.endDate + " " + this.endTime);
-//        sb.append(" | " + this.userName);
-//        return sb.toString();
-//    }
 }

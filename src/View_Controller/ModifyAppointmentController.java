@@ -21,10 +21,16 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static Model.Alerts.apptErrorAlert;
+import static Model.Alerts.noApptSelected;
+import static Model.DateTimeConversion.userLocalTZtoUTC;
+
+/** Controls modify appointment screen */
 public class ModifyAppointmentController implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
 
@@ -63,7 +69,11 @@ public class ModifyAppointmentController implements Initializable {
     private ObservableList<Appointment> apptsTable = FXCollections.observableArrayList();
     private static Appointment selectedAppt;
 
-    // Handle Buttons
+    /**
+     * Returns to MainScreen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void cancelButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
@@ -73,6 +83,11 @@ public class ModifyAppointmentController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Clears input fields except datePickers
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void clearButton(ActionEvent event) throws IOException {
         apptIDTextField.clear();
@@ -81,9 +96,6 @@ public class ModifyAppointmentController implements Initializable {
         locationTextField.clear();
         typeTextField.clear();
 
-        startDatePicker.setValue(null);
-        endDatePicker.setValue(null);
-
         contactComboBox.getSelectionModel().clearSelection();
         startTimeComboBox.getSelectionModel().clearSelection();
         endTimeComboBox.getSelectionModel().clearSelection();
@@ -91,17 +103,19 @@ public class ModifyAppointmentController implements Initializable {
         userComboBox.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Handles modify button. Pulls data of selected row into input fields.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void modifyButton(ActionEvent event) throws IOException {
         selectedAppt = appointmentsTableView.getSelectionModel().getSelectedItem();
 
         if (selectedAppt == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Unable to modify appointment.");
-            alert.setContentText("No appointment selected! Please select an appointment from the table.");
-            alert.showAndWait();
-        } else {
+            noApptSelected("modify", "appointment");
+            return;
+        }
             enableFields();
             deleteButton.setDisable(true);
 
@@ -117,60 +131,103 @@ public class ModifyAppointmentController implements Initializable {
             endDatePicker.setValue(DateTimeConversion.convertZDTtoLocalDate(selectedAppt.getEnd()));
             startTimeComboBox.setValue(DateTimeConversion.convertZDTtoLocalTime(selectedAppt.getStart()));
             endTimeComboBox.setValue(DateTimeConversion.convertZDTtoLocalTime(selectedAppt.getEnd()));
-        }
     }
 
+    /**
+     * Runs input validation checks, then updates appointment if pass
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void saveButton(ActionEvent event) throws IOException {
         selectedAppt = appointmentsTableView.getSelectionModel().getSelectedItem();
 
+        // Checks if an appointment is selected
         if (selectedAppt == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Unable to save appointment.");
-            alert.setContentText("No appointment selected! Please select a appointment from the table.");
-            alert.showAndWait();
-        } else {
-            int apptID = Integer.parseInt(apptIDTextField.getText());
-            String title = titleTextField.getText();
-            String description = descriptionTextField.getText();
-            String location = locationTextField.getText();
-            String type = typeTextField.getText();
-            int contactID = contactComboBox.getValue().getContactID();
-            int custID = customerComboBox.getValue().getCustomerID();
-            int userID = userComboBox.getValue().getUserID();
-
-            LocalDate startDate = startDatePicker.getValue();
-            LocalTime startTime = startTimeComboBox.getValue();
-            String startDT = DateTimeConversion.convertLocalDateLocalTimetoUTCString(startDate, startTime);
-            LocalDate endDate = endDatePicker.getValue();
-            LocalTime endTime = endTimeComboBox.getValue();
-            String endDT = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
-
-            // Add time validation which checks if its within business hours (08:00 - 22:00 EST) -> (12:00 - 02:00 UTC)
-            // Add time validation to make sure appointment times don't overlap
-            // Add validation which checks if any fields are null
-
-            DBAppointments.updateAppointment(apptID, title, description, location, type, custID, userID, contactID, startDT, endDT);
-            refreshApptTable();
-            messageLabel.setText("Appointment ID [" + apptID + "] of type [" + type + "] saved.");
-            messageLabel.setVisible(true);
-            clearButton(event);
-            disableFields();
-            deleteButton.setDisable(false);
+            noApptSelected("modify", "appointment");
+            return;
         }
+
+        // Error alert if any fields are empty
+        if (areFieldsEmpty()) {
+            apptErrorAlert("Please fill out all input fields.");
+            return;
+        }
+
+        // Get DateTime from input fields
+        LocalDate startDate = startDatePicker.getValue();
+        LocalTime startTime = startTimeComboBox.getValue();
+
+        LocalDate endDate = endDatePicker.getValue();
+        LocalTime endTime = endTimeComboBox.getValue();
+
+        // Convert to LocalDateTime
+        LocalDateTime startDT = LocalDateTime.of(startDate, startTime);
+        LocalDateTime endDT = LocalDateTime.of(endDate, endTime);
+
+        // Alert if end is scheduled before start
+        if (endDT.isBefore(startDT)) {
+            apptErrorAlert("Appointment end time can't be before start time.");
+            return;
+        }
+
+        // Alert if start and end are equal
+        if (endDT.equals(startDT)) {
+            apptErrorAlert("Appointment start and end time can't be equal!");
+            return;
+        }
+
+        // Alert if appointment scheduled outside of business hours
+        if (!isDuringBusinessHours(startDT, endDT)) {
+            apptErrorAlert("Appointment must be during business hours!");
+            return;
+        }
+
+        // Convert system default time zone to UTC time zone (for DB query)
+        String startDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(startDate, startTime);
+        String endDateTime = DateTimeConversion.convertLocalDateLocalTimetoUTCString(endDate, endTime);
+
+        // Get input field values
+        int apptID = Integer.parseInt(apptIDTextField.getText());
+        String title = titleTextField.getText();
+        String description = descriptionTextField.getText();
+        String location = locationTextField.getText();
+        String type = typeTextField.getText();
+        int contactID = contactComboBox.getValue().getContactID();
+        int custID = customerComboBox.getValue().getCustomerID();
+        int userID = userComboBox.getValue().getUserID();
+
+        // Alert if there are overlapping appointments
+        if (isOverlappingAppt(custID, startDT, endDT)) {
+            apptErrorAlert("The customer is already booked for that time.\nPlease try a different time.");
+            return;
+        }
+
+        // Update appointment and refresh table
+        DBAppointments.updateAppointment(apptID, title, description, location, type, custID, userID, contactID, startDateTime, endDateTime);
+        refreshApptTable();
+
+        // Displays message on screen with what appointment and type were deleted.
+        messageLabel.setText("Appointment ID [" + apptID + "] of type [" + type + "] saved.");
+        messageLabel.setVisible(true);
+
+        // Clear and disable appropriate fields
+        clearButton(event);
+        disableFields();
+        deleteButton.setDisable(false);
     }
 
+    /**
+     * Handles deleting appointments, then displays a message of AppointmentID and type deleted.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void deleteButton(ActionEvent event) throws IOException {
         selectedAppt = appointmentsTableView.getSelectionModel().getSelectedItem();
 
         if (selectedAppt == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Unable to delete appointment.");
-            alert.setContentText("No appointment selected! Please select a appointment from the table.");
-            alert.showAndWait();
+            noApptSelected("delete", "appointment");
         } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Appointment");
@@ -195,6 +252,81 @@ public class ModifyAppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Checks for appointment overlap for specified customer
+     * @param custID Passed in through customerComboBox
+     * @param newStart startDateTime from input fields
+     * @param newEnd startEndTime from input fields
+     * @return true if is overlapping, false if no overlap
+     */
+    private boolean isOverlappingAppt(int custID, LocalDateTime newStart, LocalDateTime newEnd) {
+        for (Appointment a : apptsTable) {
+            if (a.getCustomerID() == custID) {
+                LocalDateTime existStart = a.getStart().toLocalDateTime();
+                LocalDateTime existEnd = a.getEnd().toLocalDateTime();
+
+//                System.out.println(a.getCustName() + ": Checking new " + newStart + " - " + newEnd + " against existing " + existStart + " - " + existEnd);
+                if (newStart.isAfter(existStart) && newStart.isBefore(existEnd) || newEnd.isAfter(existStart) && newEnd.isBefore(existEnd)
+                        || newStart.equals(existStart) && newEnd.equals(existEnd) || newStart.equals(existStart) && newEnd.isAfter(existStart)
+                        || newEnd.equals(existEnd) && newStart.isBefore(existEnd)) {
+                    System.out.println("There is an overlapping appointment!");
+                    return true;
+                }
+            }
+        }
+        System.out.println("There were no overlapping appointments!");
+        return false;
+    }
+
+    /**
+     * Check if passed in LocalDateTime range is within business hours of
+     * 12:00 - 02:00 UTC or 08:00 - 20:00 EST
+     * @param start LocalDateTime from input fields
+     * @param end LocalDateTime from input fields
+     * @return true if during business hours, false if not
+     */
+    private boolean isDuringBusinessHours(LocalDateTime start, LocalDateTime end) {
+        // Convert from local time to UTC
+        LocalDateTime utcStart = userLocalTZtoUTC(start);
+        LocalDateTime utcEnd = userLocalTZtoUTC(end);
+
+        LocalTime utcStartTime = utcStart.toLocalTime();
+        LocalTime utcEndTime = utcEnd.toLocalTime();
+
+        System.out.println("UTC start: " + utcStartTime + "| UTC end: " + utcEndTime);
+
+        if ((utcStartTime.isAfter(LocalTime.of(11,59)) || (utcStartTime.isBefore(LocalTime.of(2,0,1)) && (utcEndTime.isAfter(LocalTime.of(11,59)) || utcEndTime.isBefore(LocalTime.of(2, 0,1)))))){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if any input fields are empty
+     * @return true if empty, false if not
+     */
+    private boolean areFieldsEmpty(){
+        boolean isContactEmpty = contactComboBox.getValue() == null;
+        boolean isCustEmpty = customerComboBox.getValue() == null;
+        boolean isStartDateEmpty = startDatePicker.getValue() == null;
+        boolean isStartTimeEmpty = startTimeComboBox.getValue() == null;
+        boolean isEndDateEmpty = endDatePicker.getValue() == null;
+        boolean isEndTimeEmpty = endTimeComboBox.getValue() == null;
+
+        if (titleTextField.getText().isEmpty() || descriptionTextField.getText().isEmpty() ||
+                locationTextField.getText().isEmpty() || typeTextField.getText().isEmpty() ||
+                isContactEmpty || isCustEmpty || isStartDateEmpty || isStartTimeEmpty ||
+                isEndDateEmpty || isEndTimeEmpty) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Generates times for time combo boxes in 15 minute increments
+     * @return ObservableList of LocalTime objects ranging from 0:00 - 23:45
+     */
     private ObservableList<LocalTime> fillTimeComboBox() {
         ObservableList<LocalTime> timeList = FXCollections.observableArrayList();
         LocalTime start = LocalTime.of(0, 0);
@@ -210,6 +342,9 @@ public class ModifyAppointmentController implements Initializable {
         return timeList;
     }
 
+    /**
+     * Enables input fields
+     */
     private void enableFields() {
         titleTextField.setDisable(false);
         descriptionTextField.setDisable(false);
@@ -224,6 +359,9 @@ public class ModifyAppointmentController implements Initializable {
         userComboBox.setDisable(false);
     }
 
+    /**
+     * Disables input fields
+     */
     private void disableFields() {
         titleTextField.setDisable(true);
         descriptionTextField.setDisable(true);
@@ -238,12 +376,20 @@ public class ModifyAppointmentController implements Initializable {
         userComboBox.setDisable(true);
     }
 
+    /**
+     * Updates apptsTable from SQL query observableList and refreshes TableView
+     */
     private void refreshApptTable() {
         apptsTable = DBAppointments.getAllAppointments();
         appointmentsTableView.setItems(apptsTable);
         appointmentsTableView.refresh();
     }
 
+    /**
+     * Looks up contact from contactComboBox
+     * @param contactName used to search for contact
+     * @return Selected contact object from comboBox
+     */
     private Contact lookUpContact(String contactName) {
         for (Contact c : contactComboBox.getItems()) {
             if (c.getContactName().equals(contactName)) {
@@ -253,6 +399,11 @@ public class ModifyAppointmentController implements Initializable {
         return null;
     }
 
+    /**
+     * Looks up customer from custComboBox
+     * @param custName used to search for customer
+     * @return Selected customer object from comboBox
+     */
     private Customer lookUpCustomer(String custName) {
         for (Customer cu : customerComboBox.getItems()) {
             if (cu.getName().equals(custName)) {
@@ -262,6 +413,11 @@ public class ModifyAppointmentController implements Initializable {
         return null;
     }
 
+    /**
+     * Looks up user from userComboBox
+     * @param userName used to search for user
+     * @return Selected user object from comboBox
+     */
     private User lookUpUser(String userName) {
         for (User u : userComboBox.getItems()) {
             if (u.getUserName().equals(userName)) {
@@ -271,6 +427,11 @@ public class ModifyAppointmentController implements Initializable {
         return null;
     }
 
+    /**
+     * Populates appointments Table, comboboxes, and hides message label
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         apptsTable = DBAppointments.getAllAppointments();
@@ -298,6 +459,7 @@ public class ModifyAppointmentController implements Initializable {
         startTimeComboBox.setItems(fillTimeComboBox());
         endTimeComboBox.setItems(fillTimeComboBox());
 
+        // Hides message label
         messageLabel.setVisible(false);
     }
 

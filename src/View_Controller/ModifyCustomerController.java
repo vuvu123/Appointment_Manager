@@ -24,7 +24,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static Database.DBFirstLevelDivision.*;
+import static Model.Alerts.custErrorAlert;
+import static Model.Alerts.noSelectionAlert;
 
+/** Controls Modify Customer screen */
 public class ModifyCustomerController implements Initializable {
     @FXML private TableView<Customer> customersTableView;
 
@@ -56,7 +59,11 @@ public class ModifyCustomerController implements Initializable {
 
     private static Customer selectedCust;
 
-    // Handle buttons
+    /**
+     * Handles cancel button, returns to MainScreen scene
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void cancelButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
@@ -66,6 +73,11 @@ public class ModifyCustomerController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Handles clear button, clears user input fields
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void clearButton(ActionEvent event) throws IOException {
         customerIDTextField.setText("");
@@ -77,18 +89,34 @@ public class ModifyCustomerController implements Initializable {
         firstLevelDivisionComboBox.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Handles clearSarchField button, clears field and refreshes customer table view
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void clearSearchFieldButton(ActionEvent event) throws IOException {
         searchTextField.setText("");
         updateCustomersTable();
     }
 
+    /**
+     * Handles search button, searches by customer name, displays customer list on table
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void searchButton(ActionEvent event) throws IOException {
         customersTableView.setItems(lookUpCustomer(searchTextField.getText()));
         customersTableView.refresh();
     }
 
+    /**
+     * Handles save button: If customer is selected and passes input validation, then update customer.
+     * Then disables/enables appropriate fields.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void saveButton(ActionEvent event) throws IOException {
         selectedCust = customersTableView.getSelectionModel().getSelectedItem();
@@ -102,11 +130,7 @@ public class ModifyCustomerController implements Initializable {
             boolean isDivisionEmpty = firstLevelDivisionComboBox.getValue() == null;
 
             if (custID.isEmpty() || custName.isEmpty() || address.isEmpty() || postalCode.isEmpty() || phone.isEmpty() || isDivisionEmpty) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setHeaderText("Unable to add customer.");
-                alert.setContentText("Please fill out all input fields.");
-                alert.showAndWait();
+                custErrorAlert("modify", "Please fill out all input fields.");
             } else {
                 int divID = firstLevelDivisionComboBox.getValue().getDivisionID();
 
@@ -117,14 +141,15 @@ public class ModifyCustomerController implements Initializable {
                 disableFieldsOnSave();
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("No customer selected!");
-            alert.setContentText("Please select a customer from the table and click modify.");
-            alert.showAndWait();
+            noSelectionAlert("customer", "modify");
         }
     }
 
+    /**
+     * Handles deleting customers: Adds prompt to confirm deletion, then displays message of customer deletion
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void deleteButton(ActionEvent event) throws IOException {
         selectedCust = customersTableView.getSelectionModel().getSelectedItem();
@@ -147,14 +172,15 @@ public class ModifyCustomerController implements Initializable {
                 System.out.println("Deletion of customer " + selectedCust.getName() +" delete canceled.");
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Unable to delete product.");
-            alert.setContentText("No customer selected! Please select a customer from the table.");
-            alert.showAndWait();
+            noSelectionAlert("customer", "delete");
         }
     }
 
+    /**
+     * Handles modify button: enables and populates input fields of selected customer
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void modifyButton(ActionEvent event) throws IOException {
         selectedCust = customersTableView.getSelectionModel().getSelectedItem();
@@ -171,29 +197,36 @@ public class ModifyCustomerController implements Initializable {
             countryComboBox.setValue(lookUpCountry(selectedCust.getCountry()));
             firstLevelDivisionComboBox.setValue(lookUpFirstDiv(selectedCust.getDivisionID()));
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Unable to modify product.");
-            alert.setContentText("No customer selected! Please select a customer from the table.");
-            alert.showAndWait();
+            noSelectionAlert("customer", "modify");
         }
     }
 
+    /**
+     * Used Lambda expression to add matching customer names to ObservableList filteredCustTable
+     * @param custName String passed in from searchTextField
+     * @return ObservableList of Customer objects
+     */
     private ObservableList<Customer> lookUpCustomer(String custName) {
         String sanitizedCustName = custName.toLowerCase().trim();
 
         if (!custTableView.isEmpty()) {
             ObservableList<Customer> filteredCustTable = FXCollections.observableArrayList();
-            for (Customer cust : custTableView) {
+            // LAMBDA USED HERE //
+            custTableView.forEach(cust -> {
                 if (cust.getName().toLowerCase().contains(sanitizedCustName)) {
                     filteredCustTable.add(cust);
                 }
-            }
+            });
             return filteredCustTable;
         }
         return null;
     }
 
+    /**
+     * Searches for divisionID passed in from combobox, returns associated FirstLevelDivision object
+     * @param divID passed in from combobox selection
+     * @return FirstLevelDivision object
+     */
     private FirstLevelDivision lookUpFirstDiv(int divID) {
         for (FirstLevelDivision div : firstLevelDivisionComboBox.getItems()) {
             if (div.getDivisionID() == divID) {
@@ -203,6 +236,11 @@ public class ModifyCustomerController implements Initializable {
         return null;
     }
 
+    /**
+     * Looks up country name passed in from combobox, returns associated country object
+     * @param name passed in from combobox selection
+     * @return Country object
+     */
     private Country lookUpCountry(String name) {
         for (Country c : countryComboBox.getItems()) {
             if (c.getCountry().equals(name)) {
@@ -212,12 +250,18 @@ public class ModifyCustomerController implements Initializable {
         return null;
     }
 
-    // Refresh customersTableView
+    /**
+     * Updates observableList custTableView and refreshes table
+     */
     private void updateCustomersTable() {
-        customersTableView.setItems(DBCustomers.getCustomers());
+        custTableView = DBCustomers.getCustomers();
+        customersTableView.setItems(custTableView);
         customersTableView.refresh();
     }
 
+    /**
+     * Enables appropriate fields when modify button is clicked
+     */
     private void enableFieldsOnModify() {
         customerNameTextField.setDisable(false);
         addressTextField.setDisable(false);
@@ -227,6 +271,9 @@ public class ModifyCustomerController implements Initializable {
         countryComboBox.setDisable(false);
     }
 
+    /**
+     * Disables appropriate fields when modify button is clicked
+     */
     private void disableFieldsOnModify() {
         clearSearchFieldButton.setDisable(true);
         deleteButton.setDisable(true);
@@ -234,6 +281,9 @@ public class ModifyCustomerController implements Initializable {
         searchButton.setDisable(true);
     }
 
+    /**
+     * Enables appropriate fields when Save button is clicked
+     */
     private void enableFieldsOnSave() {
         clearSearchFieldButton.setDisable(false);
         deleteButton.setDisable(false);
@@ -241,6 +291,9 @@ public class ModifyCustomerController implements Initializable {
         searchButton.setDisable(false);
     }
 
+    /**
+     * Disables appropriate fields when Save button is clicked
+     */
     private void disableFieldsOnSave() {
         customerNameTextField.setDisable(true);
         addressTextField.setDisable(true);
@@ -250,6 +303,13 @@ public class ModifyCustomerController implements Initializable {
         countryComboBox.setDisable(true);
     }
 
+    /**
+     * Lambda used to create an action on the countryComboBox which changes the firstLevelDivision
+     * comboBox list to the reflect the country selected
+     * Populates customers table, populates combo boxes, adds listener for country combobox
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         custTableView = DBCustomers.getCustomers();
@@ -272,10 +332,7 @@ public class ModifyCustomerController implements Initializable {
 
         infoLabel.setVisible(false);
 
-        /**
-         * Lambda used to create an action on the countryComboBox which changes the firstLevelDivision
-         * comboBox list to the reflect the country selected
-         */
+        // Lambda used to add listener for changes in country combobox
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue.setAssocDivisions(getDivisionsByCountry(newValue.getCountryID()));

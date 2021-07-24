@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/** Holds all Customer object variables */
 public class Customer {
     private final IntegerProperty customerID;
     private final StringProperty name;

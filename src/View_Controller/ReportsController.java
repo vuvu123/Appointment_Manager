@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 
 import static Database.DBConnection.getConnection;
 
+/** ReportsController generates three different reports. */
 public class ReportsController implements Initializable {
     @FXML private TableView<Appointment> contactSchedTableView;
 
@@ -45,6 +46,11 @@ public class ReportsController implements Initializable {
 
     @FXML private ToggleGroup reportToggleGroup = new ToggleGroup();
 
+    /**
+     * Handles backButton, changes scene back to MainScreen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void backButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
@@ -54,6 +60,12 @@ public class ReportsController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Handles apptTypePerMonth radioButton, generates report when clicked.
+     * Report displays count of appointments grouped by type and month
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void apptTypePerMonthReport(ActionEvent event) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -80,6 +92,12 @@ public class ReportsController implements Initializable {
         }
     }
 
+    /**
+     * Handles numApptByCust radio button, generates report when clicked.
+     * Report displays total count of appointments scheduled for each customer
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void numApptByCust(ActionEvent event) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -108,6 +126,11 @@ public class ReportsController implements Initializable {
         }
     }
 
+    /**
+     * Initializes screen by populating appointments table, populates, and adds listener (lambda used) for contact combo box
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Populate table values
@@ -129,10 +152,7 @@ public class ReportsController implements Initializable {
         // Populate combo box
         contactComboBox.setItems(Database.DBContacts.getAllContacts());
 
-        /**
-         * Lambda used to implement a listener which populates the contact schedule table reflecting the
-         * contact selected in the comboBox
-         */
+        /** Lambda used to implement a listener which populates the contact schedule table reflecting the contact selected in the comboBox */
         contactComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldContact, newContact) -> {
             contactSchedTableView.setItems(DBAppointments.getApptByContact(newContact.getContactID()));
             contactSchedTableView.refresh();

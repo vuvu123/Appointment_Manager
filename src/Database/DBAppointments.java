@@ -8,7 +8,6 @@ import javafx.scene.control.Alert;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -16,6 +15,7 @@ import java.time.ZonedDateTime;
 import static Database.DBConnection.getConnection;
 import static Model.DateTimeConversion.formatLDT;
 
+/** All SQL queries associated with Appointments */
 public class DBAppointments {
 
     /**
@@ -243,6 +243,13 @@ public class DBAppointments {
         return null;
     }
 
+    /**
+     * Returns all appointments filtered by week and year
+     * Used in appointments by week report
+     * @param week
+     * @param year
+     * @return ObservableList of Appointment objects
+     */
     public static ObservableList<Appointment> getApptByWeek(int week, String year) {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         String getAllAppointments = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, " +
@@ -295,6 +302,12 @@ public class DBAppointments {
         return null;
     }
 
+    /**
+     * Returns appointment scheduled filtered by contact
+     * Used in Schedule report
+     * @param contactID
+     * @return ObservableList of appointment objects
+     */
     public static ObservableList<Appointment> getApptByContact(int contactID) {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         String getAllAppointments = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, " +
@@ -345,6 +358,11 @@ public class DBAppointments {
         return null;
     }
 
+    /**
+     * Looks up appointments starting within 15 minutes of current dateTime and logged in user
+     * Generates alert saying if there is an upcoming appointment or not
+     * @param userID
+     */
     public static void lookUpApptsInFifteen(int userID) {
         String ApptsInFifteenUserQuery = "SELECT Appointment_ID, Start FROM appointments WHERE User_ID = ? AND Start " +
                 "BETWEEN ? AND ?";

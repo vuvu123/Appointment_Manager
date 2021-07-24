@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/** Starts, Maintains, and closes connection to database */
 public class DBConnection {
     // JDBC URL parts
     private static final String ipAddress = "jdbc:mysql://wgudb.ucertify.com:3306/";
@@ -19,6 +20,10 @@ public class DBConnection {
     private static final String username = "U07aEM";
     private static final String password = "53688972450";
 
+    /**
+     * Starts connection to database
+     * @return Connection object
+     */
     public static Connection startConnection() {
         try {
             Class.forName(MYSQLJDBCDriver);
@@ -34,10 +39,17 @@ public class DBConnection {
         return conn;
     }
 
+    /**
+     * Gets current connection to database
+     * @return Connection object
+     */
     public static Connection getConnection() {
         return conn;
     }
 
+    /**
+     * Closes connection to database
+     */
     public static void closeConnection() {
         try {
             conn.close();

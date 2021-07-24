@@ -21,6 +21,7 @@ import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/** Controls MainScreen scene which has a summary of appointments table and navigation to every other page*/
 public class MainScreenController implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
 
@@ -44,9 +45,11 @@ public class MainScreenController implements Initializable {
 
     @FXML private DatePicker datePicker;
 
-/*
- *  Handle navigation buttons
- */
+    /**
+     * Signs out returning to login screen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void signoutButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("Login.fxml"));
@@ -56,6 +59,11 @@ public class MainScreenController implements Initializable {
         stage.show();
 }
 
+    /**
+     * Opens Add Appointment Screen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void addAppointmentButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("AddAppointment.fxml"));
@@ -65,6 +73,11 @@ public class MainScreenController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Opens Modify Appointment Screen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void modifyAppointmentButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("ModifyAppointment.fxml"));
@@ -74,6 +87,11 @@ public class MainScreenController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Opens Add Customer screen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void addCustomerButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
@@ -83,6 +101,11 @@ public class MainScreenController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Opens Modify Customer screen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void modifyCustomerButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("ModifyCustomer.fxml"));
@@ -92,6 +115,11 @@ public class MainScreenController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Opens reports scene
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void reportsButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("Reports.fxml"));
@@ -101,7 +129,9 @@ public class MainScreenController implements Initializable {
         stage.show();
     }
 
-    // Filter appointments table by week
+    /**
+     * Filters appointment table by week
+     */
     @FXML
     private void weekViewRadioButtonSelected() {
         LocalDate filterDate = datePicker.getValue();
@@ -112,7 +142,9 @@ public class MainScreenController implements Initializable {
         appointmentsTableView.refresh();
     }
 
-    // Filter appointments table by month
+    /**
+     * Filters appointments by month and year selected
+     */
     @FXML
     private void monthViewRadioButtonSelected() {
         String filterDate = datePicker.getValue().toString();
@@ -123,13 +155,20 @@ public class MainScreenController implements Initializable {
         appointmentsTableView.refresh();
     }
 
-    // Show all appointments in table
+    /**
+     * Shows unfiltered appointments table
+     */
     @FXML
     private void allViewRadioButtonSelected() {
         appointmentsTableView.setItems(DBAppointments.getAllAppointments());
     }
 
-    // Refreshes table if date is changed
+    /**
+     * Handles action if datePicker Date is changed
+     * Reruns radioButton action with new date
+     * @param event
+     * @throws IOException
+     */
     @FXML private void datePickerChanged(ActionEvent event) throws IOException {
         if (weekViewRadioButton.isSelected()) {
             weekViewRadioButtonSelected();
@@ -140,6 +179,11 @@ public class MainScreenController implements Initializable {
         }
     }
 
+    /**
+     * Populates Appointments table, datePicker, and sets radioButtons to togglegroup
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize (URL url, ResourceBundle rb) {
         // Populate appointments table

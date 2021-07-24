@@ -3,11 +3,17 @@ package Model;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
+/** Utility class for DateTime conversions */
 public class DateTimeConversion {
     private static String dateFormat = "MM-dd-yyyy";
     private static String timeFormat = "HH:mm";
     private static String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * Converts ZonedDateTime to LocalDate
+     * @param zdt
+     * @return Formatted string
+     */
     public static String convertZDTtoStringLocalDate(ZonedDateTime zdt) {
         LocalDateTime ldt = zdt.toLocalDateTime();
         LocalDate ld = ldt.toLocalDate();
@@ -15,6 +21,11 @@ public class DateTimeConversion {
         return ld.format(dtfDate);
     }
 
+    /**
+     * Converts ZonedDateTime to LocalTime
+     * @param zdt
+     * @return Formatted string
+     */
     public static String convertZDTtoStringLocalTime(ZonedDateTime zdt) {
         LocalDateTime ldt = zdt.toLocalDateTime();
         LocalTime lt = ldt.toLocalTime();
@@ -22,11 +33,21 @@ public class DateTimeConversion {
         return lt.format(dtfTime);
     }
 
+    /**
+     * Converts ZonedDateTime to LocalDate
+     * @param zdt
+     * @return LocalDate
+     */
     public static LocalDate convertZDTtoLocalDate(ZonedDateTime zdt) {
         LocalDateTime ldt = zdt.toLocalDateTime();
         return ldt.toLocalDate();
     }
 
+    /**
+     * Converts ZonedDateTime to LocalTime
+     * @param zdt
+     * @return LocalTime
+     */
     public static LocalTime convertZDTtoLocalTime(ZonedDateTime zdt) {
         LocalDateTime ldt = zdt.toLocalDateTime();
         return ldt.toLocalTime();
@@ -44,9 +65,9 @@ public class DateTimeConversion {
         LocalDateTime ldt = LocalDateTime.of(ld, lt);
         ZonedDateTime ldtZoned = ldt.atZone(ZoneId.systemDefault());
         ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
-        System.out.println("Zoned Date Time: " + utcZoned);
+//        System.out.println("Zoned Date Time: " + utcZoned);
         LocalDateTime utcLDT = utcZoned.toLocalDateTime();
-        System.out.println("Local Date Time before format: " + utcLDT);
+//        System.out.println("Local Date Time before format: " + utcLDT);
         DateTimeFormatter dtfDateTime = DateTimeFormatter.ofPattern(dateTimeFormat);
         System.out.println("Formatted DateTime(to DB): " + utcLDT.format(dtfDateTime) + "\n");
         return utcLDT.format(dtfDateTime);
@@ -55,7 +76,7 @@ public class DateTimeConversion {
     /**
      * Converts LocalDateTime (UTC Time Zone) to the user's system default (Local Time)
      * @param ldt
-     * @return
+     * @return String
      */
     public static String LDTUTCtoStringLocalTime (LocalDateTime ldt) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateTimeFormat);
@@ -65,7 +86,7 @@ public class DateTimeConversion {
 
     /**
      * Formats LocalDateTime to String format "yyyy-MM-dd HH:mm:ss"
-     * @param LocalDateTime variable
+     * @param  ldt
      * @return Formatted string of param
      */
     public static String formatLDT(LocalDateTime ldt) {
@@ -76,7 +97,7 @@ public class DateTimeConversion {
     /**
      * Converts User local time zone to UTC time zone
      * @param ldt variable
-     * @return
+     * @return LocalDateTime
      */
     public static LocalDateTime userLocalTZtoUTC(LocalDateTime ldt) {
         LocalDateTime newLDT = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();

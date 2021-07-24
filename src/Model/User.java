@@ -1,5 +1,6 @@
 package Model;
 
+/** Holds all User object variables */
 public class User {
     private int userID;
     private String userName;
