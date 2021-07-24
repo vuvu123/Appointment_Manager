@@ -1,5 +1,8 @@
 package View_Controller;
 
+import Database.DBAppointments;
+import Database.DBUsers;
+import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -49,6 +53,8 @@ public class LoginController implements Initializable {
         if (verifyCredentials(user, pass)) {
             // Add log to login_activity text file
             pw.println("User " + user + " successfully logged in on " + LocalDateTime.now());
+            User currentUser = DBUsers.lookUpUser(user);
+            System.out.println("User ID: " + currentUser.getUserID() + ", UserName = " + currentUser.getUserName());
 
             // Change screen to Main Screen
             Parent parent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
@@ -57,7 +63,9 @@ public class LoginController implements Initializable {
             stage.setScene(scene);
             stage.show();
 
-            // Add alert to display if there is an appointment within 15 minutes of user's log in
+            DBAppointments.lookUpApptsInFifteen(currentUser.getUserID());
+
+
         } else {
             // Add fail log to login_activity text file
             pw.println("User " + user + " failed logging in on " + LocalDateTime.now());

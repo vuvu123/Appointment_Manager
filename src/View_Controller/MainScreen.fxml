@@ -82,6 +82,11 @@
                   </Button>
                </children>
             </HBox>
+            <Button fx:id="signoutButton" layoutX="812.0" layoutY="7.0" mnemonicParsing="false" onAction="#signoutButton" prefHeight="40.0" prefWidth="88.0" text="Sign out">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

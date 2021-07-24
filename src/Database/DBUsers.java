@@ -61,4 +61,26 @@ public class DBUsers {
         return null;
     }
 
+    /**
+     * Looks up user by userName
+     * @param username
+     * @return User object
+     */
+    public static User lookUpUser(String username) {
+        String getUserByNameQuery = "SELECT User_ID, User_Name FROM users WHERE User_Name = ?";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(getUserByNameQuery);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            rs.next();
+            User user = new User(rs.getInt("User_ID"), rs.getString("User_Name"));
+            return user;
+        } catch (Exception e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        }
+        return null;
+    }
+
 }

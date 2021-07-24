@@ -4,6 +4,7 @@ import Model.Appointment;
 import Model.DateTimeConversion;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static Database.DBConnection.getConnection;
+import static Model.DateTimeConversion.formatLDT;
 
 public class DBAppointments {
 
@@ -340,5 +342,41 @@ public class DBAppointments {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void lookUpApptsInFifteen(int userID) {
+        String ApptsInFifteenUserQuery = "SELECT Appointment_ID, Start FROM appointments WHERE User_ID = ? AND Start " +
+                "BETWEEN ? AND ?";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(ApptsInFifteenUserQuery);
+            ps.setInt(1, userID);
+            ps.setString(2, String.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
+            ps.setString(3, String.valueOf(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(15)));
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int apptID = rs.getInt("Appointment_ID");
+            LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
+            System.out.println(start);
+//            String startDateTime = DateTimeConversion.LDTUTCtoStringLocalTime(start);
+
+            System.out.println("Appointment ID: " + apptID + ", Start: " + formatLDT(start));
+
+            // Upcoming Appointment Alert
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Appointment!");
+            alert.setHeaderText("Upcoming Appointment!");
+            alert.setContentText("Starting soon!\nAppointment ID: " + apptID + " , Starting at " + formatLDT(start));
+            alert.showAndWait();
+
+        } catch (Exception e) {
+            System.out.println("No appointment in next 15 minutes.");
+            // Upcoming Appointment Alert
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("You are free!");
+            alert.setHeaderText("No Upcoming Appointment!");
+            alert.setContentText("No upcoming appointments within the next 15 minutes.");
+            alert.showAndWait();
+        }
     }
 }

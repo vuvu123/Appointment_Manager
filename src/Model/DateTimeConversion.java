@@ -51,4 +51,25 @@ public class DateTimeConversion {
         System.out.println("Formatted DateTime(to DB): " + utcLDT.format(dtfDateTime) + "\n");
         return utcLDT.format(dtfDateTime);
     }
+
+    /**
+     * Converts LocalDateTime (UTC Time Zone) to the user's system default (Local Time)
+     * @param ldt
+     * @return
+     */
+    public static String LDTUTCtoStringLocalTime (LocalDateTime ldt) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateTimeFormat);
+        LocalDateTime newLDT = ldt.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+        return newLDT.format(dtf);
+    }
+
+    /**
+     * Formats LocalDateTime to String format "yyyy-MM-dd HH:mm:ss"
+     * @param LocalDateTime variable
+     * @return Formatted string of param
+     */
+    public static String formatLDT(LocalDateTime ldt) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateTimeFormat);
+        return ldt.format(dtf);
+    }
 }

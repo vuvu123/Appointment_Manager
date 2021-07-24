@@ -48,6 +48,15 @@ public class MainScreenController implements Initializable {
  *  Handle navigation buttons
  */
     @FXML
+    private void signoutButton(ActionEvent event) throws IOException {
+        Parent parent = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        Scene scene = new Scene(parent);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+}
+
+    @FXML
     private void addAppointmentButton(ActionEvent event) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource("AddAppointment.fxml"));
         Scene scene = new Scene(parent);
