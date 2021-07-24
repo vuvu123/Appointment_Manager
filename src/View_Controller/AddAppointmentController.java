@@ -23,8 +23,6 @@ import java.net.URL;
 import java.time.*;
 import java.util.ResourceBundle;
 import static Model.DateTimeConversion.userLocalTZtoUTC;
-import static Model.DateTimeConversion.convertLocalDateLocalTimetoUTCString;
-import static Database.DBAppointments.checkOverlappingAppts;
 
 public class AddAppointmentController implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
@@ -153,19 +151,47 @@ public class AddAppointmentController implements Initializable {
         int custID = customerComboBox.getValue().getCustomerID();
         int user = userComboBox.getValue().getUserID();
 
-        // Business hours (5:00 - 19:00 PST) -> (08:00 - 22:00 EST) -> (12:00 - 02:00 UTC)
-        // Add time validation to make sure appointment times don't overlap for selected customer
-        if (!checkOverlappingAppts(custID,convertLocalDateLocalTimetoUTCString(startDate, startTime), convertLocalDateLocalTimetoUTCString(endDate, endTime))) {
-            DBAppointments.addAppointment(title, description, location, type, contactID, custID, startDateTime, endDateTime, user);
-            refreshApptTable();
-            clearButton(event);
-        } else {
+        // Check overlapping appointments
+        if (isOverlappingAppt(custID, startDT, endDT)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("Unable to add appointment.");
             alert.setContentText("The customer is already booked for that time.\nPlease try a different time.");
             alert.showAndWait();
+
+            return;
         }
+
+        // Add appointment and refresh table
+        DBAppointments.addAppointment(title, description, location, type, contactID, custID, startDateTime, endDateTime, user);
+        refreshApptTable();
+        clearButton(event);
+    }
+
+    /**
+     * Checks for appointment overlap for specified customer
+     * @param custID Passed in through customerComboBox
+     * @param newStart startDateTime from input fields
+     * @param newEnd startEndTime from input fields
+     * @return true if is overlapping, false if no overlap
+     */
+    private boolean isOverlappingAppt(int custID, LocalDateTime newStart, LocalDateTime newEnd) {
+        for (Appointment a : apptsTable) {
+            if (a.getCustomerID() == custID) {
+                LocalDateTime existStart = a.getStart().toLocalDateTime();
+                LocalDateTime existEnd = a.getEnd().toLocalDateTime();
+
+                System.out.println(a.getCustName() + ": Checking new " + newStart + " - " + newEnd + " against existing " + existStart + " - " + existEnd);
+                if (newStart.isAfter(existStart) && newStart.isBefore(existEnd) || newEnd.isAfter(existStart) && newEnd.isBefore(existEnd)
+                    || newStart.equals(existStart) && newEnd.equals(existEnd) || newStart.equals(existStart) && newEnd.isAfter(existStart)
+                    || newEnd.equals(existEnd) && newStart.isBefore(existEnd)) {
+                    System.out.println("There is an overlapping appointment!");
+                    return true;
+                }
+            }
+        }
+        System.out.println("There were no overlapping appointments!");
+        return false;
     }
 
     private boolean isDuringBusinessHours(LocalDateTime start, LocalDateTime end) {
@@ -178,7 +204,7 @@ public class AddAppointmentController implements Initializable {
 
         System.out.println("UTC start: " + utcStartTime + "| UTC end: " + utcEndTime);
 
-        if ((utcStartTime.isAfter(LocalTime.of(11,59)) || (utcStartTime.isBefore(LocalTime.of(2,0)) && (utcEndTime.isAfter(LocalTime.of(11,59)) || utcEndTime.isBefore(LocalTime.of(2, 0)))))){
+        if ((utcStartTime.isAfter(LocalTime.of(11,59)) || (utcStartTime.isBefore(LocalTime.of(2,0,1)) && (utcEndTime.isAfter(LocalTime.of(11,59)) || utcEndTime.isBefore(LocalTime.of(2, 0,1)))))){
             return true;
         } else {
             return false;
@@ -201,6 +227,9 @@ public class AddAppointmentController implements Initializable {
         }
         return false;
     }
+
+    // Check overlap
+/*    private boolean isOverlappingAppt*/
 
     private ObservableList<LocalTime> fillTimeComboBox() {
         ObservableList<LocalTime> timeList = FXCollections.observableArrayList();
