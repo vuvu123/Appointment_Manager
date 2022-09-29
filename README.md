@@ -1,5 +1,3 @@
-Software II - C195
-
 Title: Appointment Management System
 
 Purpose: This program manages appointments, customers, and generates reports for a business.
